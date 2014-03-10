@@ -25,10 +25,10 @@ int main(int argc, char *argv[]) {
 	char* base_di_partenza = argv[2];
 	char* base_di_arrivo = argv[3];
 
-	// if (unit_test()) {
-	// 	printf("Unit test fallito. Uscita...\n");
-	// 	return 1;													// Se non passa tutti gli unit test usciamo 
-	// }
+	if (unit_test()) {
+		printf("Unit test fallito. Uscita...\n");
+		return 1;													// Se non passa tutti gli unit test usciamo 
+	}
 
 	int partenza = string_to_int(base_di_partenza, 10);				// Base di partenza convertita in int per passarla alle funzioni
 	int arrivo = string_to_int(base_di_arrivo, 10);					// Base di arrivo convertita in int per passarla alle funzioni
@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {
 		printf("%i\n", result);										// Stampiamo a schermo il risultato
 	}
 	else {															// Se abbiamo un numero in base 10 da convertire a un'altra base usiamo int_to_string
-		int convertire = string_to_int(numero_da_convertire, 10);	// Il numero da convertire deve essere un int per into_to_string
+		int convertire = string_to_int(numero_da_convertire, partenza); // Il numero da convertire deve essere un int per into_to_string
 		int_to_string(convertire, number_array, arrivo);			// Non stampiamo il risultato perché viene stampato dalla funzione stessa
 	}
 
@@ -124,15 +124,53 @@ int opposite(int number) {
 	return ~number + 1;												// Funzione per calcolare l'opposto con il NOT, aggiungiamo 1 come da formula
 }
 
-// int unit_test(void) {
-// 	if (string_to_int({4, 5, 6, '\0'}, 8) != 302) {
-// 		printf("Test fallito, 456 in base 8 dovrebbe diventare 302 in base 10, invece risulta %i\n", string_to_int({4, 5, 6, '\0'}, 8));
-// 		return 1;
-// 	}
+int unit_test(void) {
+	char string[] = "456";
+	if (string_to_int(string, 8) != 302) {
+		printf("Test fallito, 456 in base 8 dovrebbe diventare 302 in base 10, invece risulta %i\n", string_to_int(string, 8));
+		return -1;
+	}
 
-// 	if (string_to_int({'F', 'A', 9, '\0'}, 16) != 4009) {
-// 		printf("Test fallito, FA9 in base 16 dovrebbe diventare 4009 in base 10, invece risulta %i\n", string_to_int({'F', 'A', 9, '\0'}, 16));
-// 		return 1;
-// 	}
-// 	return 0;
-// }
+	char string1[] = "-456";
+	if (string_to_int(string1, 8) != -302) {
+		printf("Test fallito, -456 in base 8 dovrebbe diventare -302 in base 10, invece risulta %i\n", string_to_int(string1, 8));
+		return -1;
+	}
+
+	char string2[] = "FA9";
+	if (string_to_int(string2, 16) != 4009) {
+		printf("Test fallito, FA9 in base 16 dovrebbe diventare 4009 in base 10, invece risulta %i\n", string_to_int(string2, 16));
+		return -1;
+	}
+
+	char string3[] = "-FA9";
+	if (string_to_int(string3, 16) != -4009) {
+		printf("Test fallito, -FA9 in base 16 dovrebbe diventare -4009 in base 10, invece risulta %i\n", string_to_int(string3, 16));
+		return -1;
+	}
+
+	char string4[] = "1011";
+	if (string_to_int(string4, 2) != 11) {
+		printf("Test fallito, 1011 in base 2 dovrebbe diventare 11 in base 10, invece risulta %i\n", string_to_int(string4, 2));
+		return -1;
+	}
+
+	char string5[] = "-1011";
+	if (string_to_int(string5, 2) != -11) {
+		printf("Test fallito, -1011 in base 2 dovrebbe diventare -11 in base 10, invece risulta %i\n", string_to_int(string5, 2));
+		return -1;
+	}
+
+	if (string_to_int(string4, 5) != 131) {
+		printf("Test fallito, 1011 in base 5 dovrebbe diventare 131 in base 10, invece risulta %i\n", string_to_int(string4, 5));
+		return -1;
+	}
+
+	if (string_to_int(string5, 5) != -131) {
+		printf("Test fallito, -1011 in base 5 dovrebbe diventare -131 in base 10, invece risulta %i\n", string_to_int(string5, 5));
+		return -1;
+	}
+
+
+	return 0;
+}

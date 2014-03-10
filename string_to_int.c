@@ -16,30 +16,40 @@ unsigned int string_to_int(char *string, unsigned int base);
 void int_to_string(unsigned int integer, char *string, unsigned int base);
 int opposite(int number);
 int unit_test(void);
+int controllo_numero_base (char *numero, int base);
+
 
 int main(int argc, char *argv[]) {
-	char number_array[MAX_LENGTH_ARRAY]; 							// Array che verrà passato alla funzione int_to_string
-	unsigned int result;											// Il risultato è dove verrà salvato il risultato di string_to_int
 
-	char* numero_da_convertire = argv[1];
-	char* base_di_partenza = argv[2];
-	char* base_di_arrivo = argv[3];
+	if (argc != 4) {
+		printf("Errore.\nUsage: ./script <numero> <base-di-partenza> <base-di-arrivo>\n\n");
+		return 0;
+	} else {
+		char number_array[MAX_LENGTH_ARRAY]; 							// Array che verrà passato alla funzione int_to_string
+		unsigned int result;											// Il risultato è dove verrà salvato il risultato di string_to_int
 
-	// if (unit_test()) {
-	// 	printf("Unit test fallito. Uscita...\n");
-	// 	return 1;													// Se non passa tutti gli unit test usciamo 
-	// }
+		char* numero_da_convertire = argv[1];
+		char* base_di_partenza = argv[2];
+		char* base_di_arrivo = argv[3];
 
-	int partenza = string_to_int(base_di_partenza, 10);				// Base di partenza convertita in int per passarla alle funzioni
-	int arrivo = string_to_int(base_di_arrivo, 10);					// Base di arrivo convertita in int per passarla alle funzioni
+		// if (unit_test()) {
+		// 	printf("Unit test fallito. Uscita...\n");
+		// 	return 1;													// Se non passa tutti gli unit test usciamo 
+		// }
 
-	if (arrivo == 10) {												// Se la base di arrivo è 10 usiamo string_to_int
-		result = string_to_int(numero_da_convertire, partenza);
-		printf("%i\n", result);										// Stampiamo a schermo il risultato
-	}
-	else {															// Se abbiamo un numero in base 10 da convertire a un'altra base usiamo int_to_string
-		int convertire = string_to_int(numero_da_convertire, 10);	// Il numero da convertire deve essere un int per into_to_string
-		int_to_string(convertire, number_array, arrivo);			// Non stampiamo il risultato perché viene stampato dalla funzione stessa
+		int partenza = string_to_int(base_di_partenza, 10);				// Base di partenza convertita in int per passarla alle funzioni
+		int arrivo = string_to_int(base_di_arrivo, 10);					// Base di arrivo convertita in int per passarla alle funzioni
+
+		controllo_numero_base(3, partenza);
+
+		if (arrivo == 10) {												// Se la base di arrivo è 10 usiamo string_to_int
+			result = string_to_int(numero_da_convertire, partenza);
+			printf("%i\n", result);										// Stampiamo a schermo il risultato
+		}
+		else {															// Se abbiamo un numero in base 10 da convertire a un'altra base usiamo int_to_string
+			int convertire = string_to_int(numero_da_convertire, 10);	// Il numero da convertire deve essere un int per into_to_string
+			int_to_string(convertire, number_array, arrivo);			// Non stampiamo il risultato perché viene stampato dalla funzione stessa
+		}
 	}
 
 	return 0;														// Terminiamo il programma
@@ -123,6 +133,17 @@ void int_to_string(unsigned int integer, char *string, unsigned int base) {
 int opposite(int number) {
 	return ~number + 1;												// Funzione per calcolare l'opposto con il NOT, aggiungiamo 1 come da formula
 }
+
+int controllo_numero_base(char *numero, int base) {
+
+	if (base > 0 || base < 63) {
+		printf("OK\n");
+		return 1;
+	} else {
+		return -1;
+	}
+}
+
 
 // int unit_test(void) {
 // 	if (string_to_int({4, 5, 6, '\0'}, 8) != 302) {

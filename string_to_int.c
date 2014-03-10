@@ -16,7 +16,8 @@ unsigned int string_to_int(char *string, unsigned int base);
 void int_to_string(unsigned int integer, char *string, unsigned int base);
 int opposite(int number);
 int unit_test(void);
-int controllo_numero_base (char *numero, int base);
+int controllo_numero_base(char *numero, int base);
+int controllo_input(char *numero);
 
 
 int main(int argc, char *argv[]) {
@@ -28,27 +29,45 @@ int main(int argc, char *argv[]) {
 		char number_array[MAX_LENGTH_ARRAY]; 							// Array che verrà passato alla funzione int_to_string
 		unsigned int result;											// Il risultato è dove verrà salvato il risultato di string_to_int
 
+
 		char* numero_da_convertire = argv[1];
 		char* base_di_partenza = argv[2];
 		char* base_di_arrivo = argv[3];
+
+		int partenza = string_to_int(base_di_partenza, 10);				// Base di partenza convertita in int per passarla alle funzioni
+		int arrivo = string_to_int(base_di_arrivo, 10);					// Base di arrivo convertita in int per passarla alle funzioni
+
+
+		if (unit_test()) {
+			printf("Unit test fallito. Uscita...\n");
+			return 1;													// Se non passa tutti gli unit test usciamo 
+		}
 
 		// if (unit_test()) {
 		// 	printf("Unit test fallito. Uscita...\n");
 		// 	return 1;													// Se non passa tutti gli unit test usciamo 
 		// }
 
-		int partenza = string_to_int(base_di_partenza, 10);				// Base di partenza convertita in int per passarla alle funzioni
-		int arrivo = string_to_int(base_di_arrivo, 10);					// Base di arrivo convertita in int per passarla alle funzioni
 
-		controllo_numero_base(3, partenza);
+		if (controllo_numero_base(numero_da_convertire, partenza) == 1) {
+			if(controllo_input(numero_da_convertire) == 1) {
 
-		if (arrivo == 10) {												// Se la base di arrivo è 10 usiamo string_to_int
-			result = string_to_int(numero_da_convertire, partenza);
-			printf("%i\n", result);										// Stampiamo a schermo il risultato
-		}
-		else {															// Se abbiamo un numero in base 10 da convertire a un'altra base usiamo int_to_string
-			int convertire = string_to_int(numero_da_convertire, 10);	// Il numero da convertire deve essere un int per into_to_string
-			int_to_string(convertire, number_array, arrivo);			// Non stampiamo il risultato perché viene stampato dalla funzione stessa
+				if (arrivo == 10) {												// Se la base di arrivo è 10 usiamo string_to_int
+					result = string_to_int(numero_da_convertire, partenza);
+					printf("%i\n", result);										// Stampiamo a schermo il risultato
+				}
+				else {															// Se abbiamo un numero in base 10 da convertire a un'altra base usiamo int_to_string
+					int convertire = string_to_int(numero_da_convertire, partenza); // Il numero da convertire deve essere un int per into_to_string
+					int_to_string(convertire, number_array, arrivo);			// Non stampiamo il risultato perché viene stampato dalla funzione stessa
+
+				}
+			} else {
+				printf("La stringa inserita contiene dei caratteri non ammessi\n\n");
+				return -1;
+			}
+		} else {
+			printf("Il numero inserito non può far parte della base %d\n\n", partenza);
+			return -1;
 		}
 	}
 
@@ -134,16 +153,67 @@ int opposite(int number) {
 	return ~number + 1;												// Funzione per calcolare l'opposto con il NOT, aggiungiamo 1 come da formula
 }
 
+
 int controllo_numero_base(char *numero, int base) {
 
-	if (base > 0 || base < 63) {
-		printf("OK\n");
+	int i, length = 0;
+
+	while (numero[length] != '\0') {
+		length++;													
+	}
+ 
+	if (base > 0 && base < 63) {
+		if (base < 11) {
+			for (i=0; i < length; i++) {
+				if (numero[i] - 48 > base) {
+					return -1;
+				}
+			}
+		}
+		if (base > 10 && base < 36) {
+			for (i=0; i< length; i++) {
+				if (numero[i] - 55 > base) {
+					return -1;
+				}
+			}
+		}
+
+		if (base > 36) {
+			for (i=0; i< length; i++) {
+				if (numero[i] - 61 > base) {
+					return -1;
+				}
+			}
+		}
+
+	} else {
+		return -1;
+	}
+
+	return 1;
+}
+
+int controllo_input(char *numero) {
+
+	int i, flag = 0, length = 0;
+
+	while (numero[length] != '\0') {
+		length++;													
+	}
+
+	for (i=0; i<length; i++) {
+		if (numero[i] > 47 && numero[i] < 58 || numero[i] > 64 && numero[i] < 91 || numero[i] > 96 && numero[i] < 123) {
+					flag++;
+		}
+	}
+
+	if (flag == length) {
 		return 1;
 	} else {
 		return -1;
 	}
-}
 
+}
 
 // int unit_test(void) {
 // 	if (string_to_int({4, 5, 6, '\0'}, 8) != 302) {
@@ -157,3 +227,54 @@ int controllo_numero_base(char *numero, int base) {
 // 	}
 // 	return 0;
 // }
+
+int unit_test(void) {
+	char string[] = "456";
+	if (string_to_int(string, 8) != 302) {
+		printf("Test fallito, 456 in base 8 dovrebbe diventare 302 in base 10, invece risulta %i\n", string_to_int(string, 8));
+		return -1;
+	}
+
+	char string1[] = "-456";
+	if (string_to_int(string1, 8) != -302) {
+		printf("Test fallito, -456 in base 8 dovrebbe diventare -302 in base 10, invece risulta %i\n", string_to_int(string1, 8));
+		return -1;
+	}
+
+	char string2[] = "FA9";
+	if (string_to_int(string2, 16) != 4009) {
+		printf("Test fallito, FA9 in base 16 dovrebbe diventare 4009 in base 10, invece risulta %i\n", string_to_int(string2, 16));
+		return -1;
+	}
+
+	char string3[] = "-FA9";
+	if (string_to_int(string3, 16) != -4009) {
+		printf("Test fallito, -FA9 in base 16 dovrebbe diventare -4009 in base 10, invece risulta %i\n", string_to_int(string3, 16));
+		return -1;
+	}
+
+	char string4[] = "1011";
+	if (string_to_int(string4, 2) != 11) {
+		printf("Test fallito, 1011 in base 2 dovrebbe diventare 11 in base 10, invece risulta %i\n", string_to_int(string4, 2));
+		return -1;
+	}
+
+	char string5[] = "-1011";
+	if (string_to_int(string5, 2) != -11) {
+		printf("Test fallito, -1011 in base 2 dovrebbe diventare -11 in base 10, invece risulta %i\n", string_to_int(string5, 2));
+		return -1;
+	}
+
+	if (string_to_int(string4, 5) != 131) {
+		printf("Test fallito, 1011 in base 5 dovrebbe diventare 131 in base 10, invece risulta %i\n", string_to_int(string4, 5));
+		return -1;
+	}
+
+	if (string_to_int(string5, 5) != -131) {
+		printf("Test fallito, -1011 in base 5 dovrebbe diventare -131 in base 10, invece risulta %i\n", string_to_int(string5, 5));
+		return -1;
+	}
+
+
+	return 0;
+}

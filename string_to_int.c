@@ -275,16 +275,16 @@ int int_to_string_test(int integer, unsigned int base, char *result) {
 
 	int_to_string(integer, number_array, base);
 
-	while (result[length] != '\0') {
+	while (result[length] != '\0') {										// Calcolo la lunghezza della stringa
 		length++;													
 	}
 
-	k = length - 1;
+	k = length - 1;											
 
 	for (i = 0; i < length; ++i)
 	{
-		if (result[0] == '-' && number_array[length-i-1] != result[i+1] && number_array[length-i-1] != '-') {
-			printf("Test fallito, %i in base %i dovrebbe essere %s, invece risulta ", integer, base, result);
+		if (result[0] == '-' && number_array[length-i-1] != result[i+1] && number_array[length-i-1] != '-') { 	// se il numero è negativo ed il risultato della conversione è sbagliato
+			printf("Test fallito, %i in base %i dovrebbe essere %s, invece risulta ", integer, base, result);	// stampo un messaggio di errore
 			printf("-");
 			while (k+1 != 0) {												// Partiamo dall'ultimo carattere inserito stampiamo la stringa
 				if (number_array[k] != '-') {
@@ -295,7 +295,7 @@ int int_to_string_test(int integer, unsigned int base, char *result) {
 			printf("\n");
 			return -1;
 		}
-		else if (result[0] != '-' && number_array[length-i-1] != result[i]) {
+		else if (result[0] != '-' && number_array[length-i-1] != result[i]) {	// se il numero non è negativo ed il risultato della conversione è sbagliato
 			printf("%c %c \n", number_array[length-i-1], result[i] );
 			printf("Test fallito, %i in base %i dovrebbe essere %s, invece risulta ", integer, base, result);
 			while (k+1 != 0) {												// Partiamo dall'ultimo carattere inserito stampiamo la stringa

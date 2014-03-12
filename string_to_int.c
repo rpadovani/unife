@@ -278,11 +278,13 @@ int int_to_string_test(int integer, unsigned int base, char *result) {
 
 	for (i = 0; i < length; ++i)
 	{
-		if (result[0] == '-' && number_array[length-i-1] != result[i+1]) {
+		if (result[0] == '-' && number_array[length-i-1] != result[i+1] && number_array[length-i-1] != '-') {
 			printf("Test fallito, %i in base %i dovrebbe essere %s, invece risulta ", integer, base, result);
 			printf("-");
 			while (k+1 != 0) {												// Partiamo dall'ultimo carattere inserito stampiamo la stringa
-				printf("%c", number_array[k]);
+				if (number_array[k] != '-') {
+					printf("%c", number_array[k]);
+				}
 				k--;
 			}
 			printf("\n");

@@ -16,38 +16,32 @@ unsigned int string_to_int(char *string, unsigned int base);
 void int_to_string(unsigned int integer, char *string, unsigned int base);
 int opposite(int number);
 int unit_test(void);
+int string_to_int_test(char *string, int base, int result);
 int controllo_numero_base(char *numero, int base);
 int controllo_input(char *numero);
 
 
 int main(int argc, char *argv[]) {
 
-	if (argc != 4) {
+	if (argc != 4) {															// Controlla il numero di parametri passati al programma
 		printf("Errore.\nUsage: ./script <numero> <base-di-partenza> <base-di-arrivo>\n\n");
-		return 0;
+		return -1;
 	} else {
-		char number_array[MAX_LENGTH_ARRAY]; 							// Array che verrà passato alla funzione int_to_string
-		unsigned int result;											// Il risultato è dove verrà salvato il risultato di string_to_int
-
+		char number_array[MAX_LENGTH_ARRAY]; 									// Array che verrà passato alla funzione int_to_string
+		unsigned int result;													// Il risultato è dove verrà salvato il risultato di string_to_int
 
 		char* numero_da_convertire = argv[1];
 		char* base_di_partenza = argv[2];
 		char* base_di_arrivo = argv[3];
 
-		int partenza = string_to_int(base_di_partenza, 10);				// Base di partenza convertita in int per passarla alle funzioni
-		int arrivo = string_to_int(base_di_arrivo, 10);					// Base di arrivo convertita in int per passarla alle funzioni
+		int partenza = string_to_int(base_di_partenza, 10);						// Base di partenza convertita in int per passarla alle funzioni
+		int arrivo = string_to_int(base_di_arrivo, 10);							// Base di arrivo convertita in int per passarla alle funzioni
 
 
 		if (unit_test()) {
 			printf("Unit test fallito. Uscita...\n");
-			return 1;													// Se non passa tutti gli unit test usciamo 
+			return -1;															// Se non passa tutti gli unit test usciamo 
 		}
-
-		// if (unit_test()) {
-		// 	printf("Unit test fallito. Uscita...\n");
-		// 	return 1;													// Se non passa tutti gli unit test usciamo 
-		// }
-
 
 		if (controllo_numero_base(numero_da_convertire, partenza) == 1) {
 			if(controllo_input(numero_da_convertire) == 1) {
@@ -155,7 +149,6 @@ int opposite(int number) {
 
 
 int controllo_numero_base(char *numero, int base) {
-
 	int i, length = 0;
 
 	while (numero[length] != '\0') {
@@ -165,14 +158,14 @@ int controllo_numero_base(char *numero, int base) {
 	if (base > 0 && base < 63) {
 		if (base < 11) {
 			for (i=0; i < length; i++) {
-				if (numero[i] - 48 > base) {
+				if (numero[i] - 48 >= base) {
 					return -1;
 				}
 			}
 		}
 		if (base > 10 && base < 36) {
 			for (i=0; i< length; i++) {
-				if (numero[i] - 55 > base) {
+				if (numero[i] - 55 >= base) {
 					return -1;
 				}
 			}
@@ -180,7 +173,7 @@ int controllo_numero_base(char *numero, int base) {
 
 		if (base > 36) {
 			for (i=0; i< length; i++) {
-				if (numero[i] - 61 > base) {
+				if (numero[i] - 61 >= base) {
 					return -1;
 				}
 			}
@@ -215,66 +208,28 @@ int controllo_input(char *numero) {
 
 }
 
-// int unit_test(void) {
-// 	if (string_to_int({4, 5, 6, '\0'}, 8) != 302) {
-// 		printf("Test fallito, 456 in base 8 dovrebbe diventare 302 in base 10, invece risulta %i\n", string_to_int({4, 5, 6, '\0'}, 8));
-// 		return 1;
-// 	}
-
-// 	if (string_to_int({'F', 'A', 9, '\0'}, 16) != 4009) {
-// 		printf("Test fallito, FA9 in base 16 dovrebbe diventare 4009 in base 10, invece risulta %i\n", string_to_int({'F', 'A', 9, '\0'}, 16));
-// 		return 1;
-// 	}
-// 	return 0;
-// }
-
 int unit_test(void) {
-	char string[] = "456";
-	if (string_to_int(string, 8) != 302) {
-		printf("Test fallito, 456 in base 8 dovrebbe diventare 302 in base 10, invece risulta %i\n", string_to_int(string, 8));
+	if (string_to_int_test("456", 8, 302) 		!= 0 ||
+		string_to_int_test("-456", 8, -302) 	!= 0 ||
+		string_to_int_test("FA9", 16, 4009) 	!= 0 ||
+		string_to_int_test("-FA9", 16, -4009) 	!= 0 ||
+		string_to_int_test("1011", 2, 11) 		!= 0 ||
+		string_to_int_test("-1011", 2, -11) 	!= 0 ||
+		string_to_int_test("1011", 5, 131) 		!= 0 ||
+		string_to_int_test("-1011", 5, -131) 	!= 0 ||
+		string_to_int_test("22", 22, 46) 		!= 0  )
+	{
 		return -1;
 	}
+	return 0;
+}
 
-	char string1[] = "-456";
-	if (string_to_int(string1, 8) != -302) {
-		printf("Test fallito, -456 in base 8 dovrebbe diventare -302 in base 10, invece risulta %i\n", string_to_int(string1, 8));
+int string_to_int_test(char *string, int base, int result) {
+	if (string_to_int(string, base) != result)
+	{
+		printf("Test fallito, %s in base %d dovrebbe diventare %d in base 10, invece risulta %d\n", string, base, result, string_to_int(string, base));
 		return -1;
 	}
-
-	char string2[] = "FA9";
-	if (string_to_int(string2, 16) != 4009) {
-		printf("Test fallito, FA9 in base 16 dovrebbe diventare 4009 in base 10, invece risulta %i\n", string_to_int(string2, 16));
-		return -1;
-	}
-
-	char string3[] = "-FA9";
-	if (string_to_int(string3, 16) != -4009) {
-		printf("Test fallito, -FA9 in base 16 dovrebbe diventare -4009 in base 10, invece risulta %i\n", string_to_int(string3, 16));
-		return -1;
-	}
-
-	char string4[] = "1011";
-	if (string_to_int(string4, 2) != 11) {
-		printf("Test fallito, 1011 in base 2 dovrebbe diventare 11 in base 10, invece risulta %i\n", string_to_int(string4, 2));
-		return -1;
-	}
-
-	char string5[] = "-1011";
-	if (string_to_int(string5, 2) != -11) {
-		printf("Test fallito, -1011 in base 2 dovrebbe diventare -11 in base 10, invece risulta %i\n", string_to_int(string5, 2));
-		return -1;
-	}
-
-	if (string_to_int(string4, 5) != 131) {
-		printf("Test fallito, 1011 in base 5 dovrebbe diventare 131 in base 10, invece risulta %i\n", string_to_int(string4, 5));
-		return -1;
-	}
-
-	if (string_to_int(string5, 5) != -131) {
-		printf("Test fallito, -1011 in base 5 dovrebbe diventare -131 in base 10, invece risulta %i\n", string_to_int(string5, 5));
-		return -1;
-	}
-
 
 	return 0;
 }

@@ -23,6 +23,7 @@ int controllo_numero_base(char *numero, int base, int arrivo);
 int controllo_input(char *numero);
 void usage(void);
 
+int debug = 0;																// Viene impostato a 1 se siamo in debug mode
 
 int main(int argc, char *argv[]) {	
 	char number_array[MAX_LENGTH_ARRAY]; 									// Array che verrà passato alla funzione int_to_string
@@ -30,6 +31,7 @@ int main(int argc, char *argv[]) {
 
 	if (argc == 2) {														// Se gli argomenti passati sono due 
 		if (( strcmp(argv[1], "-unit") == 0)) {								// ed il secondo è '-unit'
+			debug = 1;
 			unit_test() == 0 ? printf("[+] Unit test Riuscito\n") : printf("[!] Unit test Fallito\n");  // Avvia gli unit test		
 		} else {
 			printf("[!] Argomento sconosciuto\n");							// se il secondo argomento non è '-unit'
@@ -139,19 +141,22 @@ void int_to_string(int integer, char *string, unsigned int base) {
 		i++;														// Aumentiamo il contatore per passare al carattere successivo della stringa
 	}
 
-	if (string[0] == '-') {
+	if (string[0] == '-' && debug == 0) {
 		printf("-");
 	}
 
 	i--;															// Dobbiamo diminuire di una unità i perché viene aumentata una volta inserito l'ultimo carattere per come è costruito il while
-	while (i+1 != 0) {												// Partiamo dall'ultimo carattere inserito stampiamo la stringa
-		if (string[i] != '-') {
-			printf("%c", string[i]);
+	
+	if (debug == 0) {												// Se non siamo in debug mode stampa i risultati
+		while (i+1 != 0) {											// Partiamo dall'ultimo carattere inserito stampiamo la stringa
+			if (string[i] != '-') {
+				printf("%c", string[i]);
+			}
+			i--;
 		}
-		i--;
-	}
 
-	printf("\n");
+		printf("\n");
+	}
 }
 
 int opposite(int number) {

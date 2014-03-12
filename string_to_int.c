@@ -29,7 +29,7 @@ int main(int argc, char *argv[]) {
 	unsigned int result;													// Il risultato è dove verrà salvato il risultato di string_to_int
 
 	if (argc == 2) { 
-		if (( strcmp(argv[1], "-unit") == 0)) {
+		if ((strcmp(argv[1], "-unit") == 0)) {
 			unit_test() == 0 ? printf("[+] Unit test Riuscito\n") : printf("[!] Unit test Fallito\n"); 		
 		} else {
 			printf("[!] Argomento sconosciuto\n");
@@ -140,7 +140,6 @@ void int_to_string(unsigned int integer, char *string, unsigned int base) {
 	}
 
 	i--;															// Dobbiamo diminuire di una unità i perché viene aumentata una volta inserito l'ultimo carattere per come è costruito il while
-
 	while (i+1 != 0) {												// Partiamo dall'ultimo carattere inserito stampiamo la stringa
 		printf("%c", string[i]);
 		i--;
@@ -229,7 +228,16 @@ int unit_test(void) {
 		string_to_int_test("1011", 5, 131) 		!= 0 ||
 		string_to_int_test("-1011", 5, -131) 	!= 0 ||
 		string_to_int_test("22", 22, 46) 		!= 0 ||
-		int_to_string_test(10, 2, "1011\0") )
+		int_to_string_test(10, 2, "1010\0") 	!= 0 ||
+		int_to_string_test(302, 8, "456\0") 	!= 0 ||
+		int_to_string_test(-302, 8, "-456\0") 	!= 0 ||
+		int_to_string_test(4009, 16, "FA9\0") 	!= 0 ||
+		int_to_string_test(-4009, 16, "-FA9\0") != 0 ||
+		int_to_string_test(11, 2, "1011\0") 	!= 0 ||
+		int_to_string_test(-11, 2, "-1011\0") 	!= 0 ||
+		int_to_string_test(131, 5, "1011\0") 	!= 0 ||
+		int_to_string_test(-131, 5, "-1011\0") 	!= 0 ||
+		int_to_string_test(46, 22, "22\0") 		!= 0  )
 	{
 		return -1;	// Se anche solo uno dei test fallisce restituiamo un fallimento nell'unit test
 	}

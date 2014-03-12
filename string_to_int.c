@@ -281,6 +281,7 @@ int int_to_string_test(unsigned int integer, unsigned int base, char *result) {
 }
 
 void usage() {
-	printf("Errore.\nUsage: ./script <numero> <base-di-partenza> <base-di-arrivo> -unit\n\n");
+	printf("Errore.\nUsage:\t./script <numero> <base-di-partenza> <base-di-arrivo> ( per eseguire lo script normalmente )\n");
+	printf("\t./script -unit ( per eseguire gli unit test )\n\n");
 																	// semplice funzione che stampa un messaggio di errore se il programma non viene eseguito con i parametri giusti
 }

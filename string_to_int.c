@@ -28,16 +28,16 @@ int main(int argc, char *argv[]) {
 	char number_array[MAX_LENGTH_ARRAY]; 									// Array che verrà passato alla funzione int_to_string
 	unsigned int result;													// Il risultato è dove verrà salvato il risultato di string_to_int
 
-	if (argc == 2) { 
-		if ((strcmp(argv[1], "-unit") == 0)) {
-			unit_test() == 0 ? printf("[+] Unit test Riuscito\n") : printf("[!] Unit test Fallito\n"); 		
+	if (argc == 2) {														// Se gli argomenti passati sono due 
+		if (( strcmp(argv[1], "-unit") == 0)) {								// ed il secondo è '-unit'
+			unit_test() == 0 ? printf("[+] Unit test Riuscito\n") : printf("[!] Unit test Fallito\n");  // Avvia gli unit test		
 		} else {
-			printf("[!] Argomento sconosciuto\n");
-			usage();
+			printf("[!] Argomento sconosciuto\n");							// se il secondo argomento non è '-unit'
+			usage();														// richiama la funzione 'usage'
 			return 1;
 		}													
-	} else if ( argc != 4) {
-		usage();
+	} else if ( argc != 4) {												// se gli argomenti passati non sono due e non sono neanche 4
+		usage();															// richiama la funzione 'usage'
 	} else {
 
 		char* numero_da_convertire = argv[1];
@@ -162,32 +162,32 @@ int opposite(int number) {
 int controllo_numero_base(char *numero, int base, int arrivo) {
 	int i, length = 0;
 
-	while (numero[length] != '\0') {
+	while (numero[length] != '\0') {								// Calcolo la lunghezza della stringa 'numero' 
 		length++;													
 	}
 
  
-	if (base > 0 && base < 63) {
-		if (arrivo > 0 && arrivo < 63) {
-			if (base < 11) {
+	if (base > 0 && base < 63) {									// Entra nel ciclo solo se la base di partenza è positiva e minore di 63
+		if (arrivo > 0 && arrivo < 63) {							// Entra nel ciclo solo se la base di arrivo è positiva e minore di 63
+			if (base < 11) {									
 				for (i=0; i < length; i++) {
-					if (numero[i] - 48 >= base) {
-						return -1;
+					if (numero[i] - 48 >= base) {					// se la stringa contiene un numero maggiore o uguale alla base ( minore di 11 )
+						return -1;									// fallisce uscendo dal ciclo di controllo
 					}
 				}
 			}
 			if (base > 10 && base < 36) {
 				for (i=0; i< length; i++) {
-					if (numero[i] - 55 >= base) {
-						return -1;
+					if (numero[i] - 55 >= base) {					// se la stringa contiene un numero ( o lettera ) maggiore o uguale alla base ( maggiore di 10 ma minore di 36 )
+						return -1;									// fallisce uscendo dal ciclo di controllo
 					}
 				}
 			}
 
 			if (base > 36) {
 				for (i=0; i< length; i++) {
-					if (numero[i] - 61 >= base) {
-						return -1;
+					if (numero[i] - 61 >= base) {					// se la stringa contiene un numero ( o lettera ) maggiore o uguale alla base
+						return -1;									// fallisce uscendo dal ciclo di controllo
 					}
 				}
 			}
@@ -206,18 +206,22 @@ int controllo_input(char *numero) {
 
 	int i, flag = 0, length = 0;
 
-	while (numero[length] != '\0') {
+	while (numero[length] != '\0') {								// controllo la lunghezza della stringa
 		length++;													
 	}
 
 	for (i=0; i<length; i++) {
-		if (numero[i] > 47 && numero[i] < 58 || numero[i] > 64 && numero[i] < 91 || numero[i] > 96 && numero[i] < 123) {
-					flag++;
+		if (numero[i] > 42 && numero[i] < 44 ||						// se ogni numero/lettera della stringa fa parte dei caratteri consentiti
+			numero[i] > 44 && numero[i] < 46 ||
+			numero[i] > 46 && numero[i] < 58 || 					
+			numero[i] > 64 && numero[i] < 91 || 
+			numero[i] > 96 && numero[i] < 123) { 
+					flag++;											// aumento la variabile 'flag' di uno
 		}
 	}
 
-	if (flag == length) {
-		return 1;
+	if (flag == length) {											// se 'flag' è effettivamente uguale alla lunghezza della stringa
+		return 1;													// vuol dire che tutti i numeri/lettere sono stati accettati dal controllo precedente
 	} else {
 		return -1;
 	}
@@ -251,10 +255,10 @@ int unit_test(void) {
 }
 
 int string_to_int_test(char *string, int base, int result) {
-	if (string_to_int(string, base) != result)
+	if (string_to_int(string, base) != result)						// se il test non da i risultati esatti
 	{
 		printf("Test fallito, %s in base %d dovrebbe diventare %d in base 10, invece risulta %d\n", string, base, result, string_to_int(string, base));
-		return -1;
+		return -1;													// scrive un messaggio di errore ed esce dal ciclo
 	}
 
 	return 0;
@@ -300,5 +304,7 @@ int int_to_string_test(int integer, unsigned int base, char *result) {
 }
 
 void usage() {
-	printf("Errore.\nUsage: ./script <numero> <base-di-partenza> <base-di-arrivo> -unit\n\n");
+	printf("Errore.\nUsage:\t./script <numero> <base-di-partenza> <base-di-arrivo> ( per eseguire lo script normalmente )\n");
+	printf("\t./script -unit ( per eseguire gli unit test )\n\n");
+																	// semplice funzione che stampa un messaggio di errore se il programma non viene eseguito con i parametri giusti
 }

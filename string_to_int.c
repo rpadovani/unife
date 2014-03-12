@@ -216,8 +216,8 @@ int controllo_input(char *numero) {
 	}
 
 	for (i=0; i<length; i++) {
-		if (numero[i] > 42 && numero[i] < 44 ||						// se ogni numero/lettera della stringa fa parte dei caratteri consentiti
-			numero[i] > 44 && numero[i] < 46 ||
+		if (numero[i] == 43 ||
+			numero[i] == 45 ||						// se ogni numero/lettera della stringa fa parte dei caratteri consentiti 
 			numero[i] > 46 && numero[i] < 58 || 					
 			numero[i] > 64 && numero[i] < 91 || 
 			numero[i] > 96 && numero[i] < 123) { 

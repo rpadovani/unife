@@ -14,11 +14,11 @@
 #define MAX_LENGTH_ARRAY 150
 
 unsigned int string_to_int(char *string, unsigned int base);
-void int_to_string(unsigned int integer, char *string, unsigned int base);
+void int_to_string(int integer, char *string, unsigned int base);
 int opposite(int number);
 int unit_test(void);
 int string_to_int_test(char *string, int base, int result);
-int int_to_string_test(unsigned int integer, unsigned int base, char *result);
+int int_to_string_test(int integer, unsigned int base, char *result);
 int controllo_numero_base(char *numero, int base, int arrivo);
 int controllo_input(char *numero);
 void usage(void);
@@ -111,7 +111,7 @@ unsigned int string_to_int(char *string, unsigned int base) {
 	return result;													// Ritorniamo il risultato
 }
 
-void int_to_string(unsigned int integer, char *string, unsigned int base) {
+void int_to_string(int integer, char *string, unsigned int base) {
 	int i = 0, tmp;
 	if (integer < 0) {												// Se è un numero negativo...
 		integer = opposite(integer);								// ... ne calcoliamo l'opposto
@@ -139,9 +139,15 @@ void int_to_string(unsigned int integer, char *string, unsigned int base) {
 		i++;														// Aumentiamo il contatore per passare al carattere successivo della stringa
 	}
 
+	if (string[0] == '-') {
+		printf("-");
+	}
+
 	i--;															// Dobbiamo diminuire di una unità i perché viene aumentata una volta inserito l'ultimo carattere per come è costruito il while
 	while (i+1 != 0) {												// Partiamo dall'ultimo carattere inserito stampiamo la stringa
-		printf("%c", string[i]);
+		if (string[i] != '-') {
+			printf("%c", string[i]);
+		}
 		i--;
 	}
 
@@ -254,8 +260,8 @@ int string_to_int_test(char *string, int base, int result) {
 	return 0;
 }
 
-int int_to_string_test(unsigned int integer, unsigned int base, char *result) {
-	int length = 0, i;
+int int_to_string_test(int integer, unsigned int base, char *result) {
+	int length = 0, i, k;
 	char number_array[MAX_LENGTH_ARRAY];
 
 	int_to_string(integer, number_array, base);
@@ -264,11 +270,28 @@ int int_to_string_test(unsigned int integer, unsigned int base, char *result) {
 		length++;													
 	}
 
+	k = length - 1;
+
 	for (i = 0; i < length; ++i)
 	{
-		if (number_array[length-i-1] != result[i])
-		{
-			printf("Test fallito, %i in base %i dovrebbe essere %s, invece risulta %s\n", integer, base, result, number_array);
+		if (result[0] == '-' && number_array[length-i-1] != result[i+1]) {
+			printf("Test fallito, %i in base %i dovrebbe essere %s, invece risulta ", integer, base, result);
+			printf("-");
+			while (k+1 != 0) {												// Partiamo dall'ultimo carattere inserito stampiamo la stringa
+				printf("%c", number_array[k]);
+				k--;
+			}
+			printf("\n");
+			return -1;
+		}
+		else if (result[0] != '-' && number_array[length-i-1] != result[i]) {
+			printf("%c %c \n", number_array[length-i-1], result[i] );
+			printf("Test fallito, %i in base %i dovrebbe essere %s, invece risulta ", integer, base, result);
+			while (k+1 != 0) {												// Partiamo dall'ultimo carattere inserito stampiamo la stringa
+				printf("%c", number_array[k]);
+				k--;
+			}
+			printf("\n");
 			return -1;
 		}
 	}

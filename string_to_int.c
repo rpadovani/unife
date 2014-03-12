@@ -9,6 +9,7 @@
 
 #include <stdio.h>
 #include <assert.h>
+#include <string.h>
 
 #define MAX_LENGTH_ARRAY 150
 
@@ -18,18 +19,26 @@ int opposite(int number);
 int unit_test(void);
 int string_to_int_test(char *string, int base, int result);
 int int_to_string_test(unsigned int integer, unsigned int base, char *result);
-int controllo_numero_base(char *numero, int base);
+int controllo_numero_base(char *numero, int base, int arrivo);
 int controllo_input(char *numero);
+void usage(void);
 
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) {	
+	char number_array[MAX_LENGTH_ARRAY]; 									// Array che verrà passato alla funzione int_to_string
+	unsigned int result;													// Il risultato è dove verrà salvato il risultato di string_to_int
 
-	if (argc != 4) {															// Controlla il numero di parametri passati al programma
-		printf("Errore.\nUsage: ./script <numero> <base-di-partenza> <base-di-arrivo>\n\n");
-		return 1;
+	if (argc == 2) { 
+		if (( strcmp(argv[1], "-unit") == 0)) {
+			unit_test() == 0 ? printf("[+] Unit test Riuscito\n") : printf("[!] Unit test Fallito\n"); 		
+		} else {
+			printf("[!] Argomento sconosciuto\n");
+			usage();
+			return 1;
+		}													
+	} else if ( argc != 4) {
+		usage();
 	} else {
-		char number_array[MAX_LENGTH_ARRAY]; 									// Array che verrà passato alla funzione int_to_string
-		unsigned int result;													// Il risultato è dove verrà salvato il risultato di string_to_int
 
 		char* numero_da_convertire = argv[1];
 		char* base_di_partenza = argv[2];
@@ -38,13 +47,7 @@ int main(int argc, char *argv[]) {
 		int partenza = string_to_int(base_di_partenza, 10);						// Base di partenza convertita in int per passarla alle funzioni
 		int arrivo = string_to_int(base_di_arrivo, 10);							// Base di arrivo convertita in int per passarla alle funzioni
 
-
-		if (unit_test()) {
-			printf("Unit test fallito. Uscita...\n");
-			return 1;															// Se non passa tutti gli unit test usciamo 
-		}
-
-		if (controllo_numero_base(numero_da_convertire, partenza) == 1) {
+		if (controllo_numero_base(numero_da_convertire, partenza, arrivo) == 1) {
 			if(controllo_input(numero_da_convertire) == 1) {
 
 				if (arrivo == 10) {												// Se la base di arrivo è 10 usiamo string_to_int
@@ -59,11 +62,14 @@ int main(int argc, char *argv[]) {
 				printf("La stringa inserita contiene dei caratteri non ammessi\n\n");
 				return 1;
 			}
-		} else {
+		} else if (controllo_numero_base(numero_da_convertire, partenza, arrivo) == -1)  {
 			printf("Il numero inserito non può far parte della base %d\n\n", partenza);
 			return 1;
+		} else {
+			printf("Il numero inserito non può essere convertito nella base %d\n", arrivo);
 		}
 	}
+	
 
 	return 0;														// Terminiamo il programma
 } 
@@ -148,35 +154,40 @@ int opposite(int number) {
 }
 
 
-int controllo_numero_base(char *numero, int base) {
+int controllo_numero_base(char *numero, int base, int arrivo) {
 	int i, length = 0;
 
 	while (numero[length] != '\0') {
 		length++;													
 	}
+
  
 	if (base > 0 && base < 63) {
-		if (base < 11) {
-			for (i=0; i < length; i++) {
-				if (numero[i] - 48 >= base) {
-					return -1;
+		if (arrivo > 0 && arrivo < 63) {
+			if (base < 11) {
+				for (i=0; i < length; i++) {
+					if (numero[i] - 48 >= base) {
+						return -1;
+					}
 				}
 			}
-		}
-		if (base > 10 && base < 36) {
-			for (i=0; i< length; i++) {
-				if (numero[i] - 55 >= base) {
-					return -1;
+			if (base > 10 && base < 36) {
+				for (i=0; i< length; i++) {
+					if (numero[i] - 55 >= base) {
+						return -1;
+					}
 				}
 			}
-		}
 
-		if (base > 36) {
-			for (i=0; i< length; i++) {
-				if (numero[i] - 61 >= base) {
-					return -1;
+			if (base > 36) {
+				for (i=0; i< length; i++) {
+					if (numero[i] - 61 >= base) {
+						return -1;
+					}
 				}
 			}
+		} else {
+			return -2;
 		}
 
 	} else {
@@ -255,4 +266,8 @@ int int_to_string_test(unsigned int integer, unsigned int base, char *result) {
 	}
 
 	return 0;
+}
+
+void usage() {
+	printf("Errore.\nUsage: ./script <numero> <base-di-partenza> <base-di-arrivo> -unit\n\n");
 }

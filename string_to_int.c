@@ -17,6 +17,7 @@ void int_to_string(unsigned int integer, char *string, unsigned int base);
 int opposite(int number);
 int unit_test(void);
 int string_to_int_test(char *string, int base, int result);
+int int_to_string_test(unsigned int integer, unsigned int base, char *result);
 int controllo_numero_base(char *numero, int base);
 int controllo_input(char *numero);
 
@@ -25,7 +26,7 @@ int main(int argc, char *argv[]) {
 
 	if (argc != 4) {															// Controlla il numero di parametri passati al programma
 		printf("Errore.\nUsage: ./script <numero> <base-di-partenza> <base-di-arrivo>\n\n");
-		return -1;
+		return 1;
 	} else {
 		char number_array[MAX_LENGTH_ARRAY]; 									// Array che verrà passato alla funzione int_to_string
 		unsigned int result;													// Il risultato è dove verrà salvato il risultato di string_to_int
@@ -40,7 +41,7 @@ int main(int argc, char *argv[]) {
 
 		if (unit_test()) {
 			printf("Unit test fallito. Uscita...\n");
-			return -1;															// Se non passa tutti gli unit test usciamo 
+			return 1;															// Se non passa tutti gli unit test usciamo 
 		}
 
 		if (controllo_numero_base(numero_da_convertire, partenza) == 1) {
@@ -53,15 +54,14 @@ int main(int argc, char *argv[]) {
 				else {															// Se abbiamo un numero in base 10 da convertire a un'altra base usiamo int_to_string
 					int convertire = string_to_int(numero_da_convertire, partenza); // Il numero da convertire deve essere un int per into_to_string
 					int_to_string(convertire, number_array, arrivo);			// Non stampiamo il risultato perché viene stampato dalla funzione stessa
-
 				}
 			} else {
 				printf("La stringa inserita contiene dei caratteri non ammessi\n\n");
-				return -1;
+				return 1;
 			}
 		} else {
 			printf("Il numero inserito non può far parte della base %d\n\n", partenza);
-			return -1;
+			return 1;
 		}
 	}
 
@@ -217,9 +217,10 @@ int unit_test(void) {
 		string_to_int_test("-1011", 2, -11) 	!= 0 ||
 		string_to_int_test("1011", 5, 131) 		!= 0 ||
 		string_to_int_test("-1011", 5, -131) 	!= 0 ||
-		string_to_int_test("22", 22, 46) 		!= 0  )
+		string_to_int_test("22", 22, 46) 		!= 0 ||
+		int_to_string_test(10, 2, "1011\0") )
 	{
-		return -1;
+		return -1;	// Se anche solo uno dei test fallisce restituiamo un fallimento nell'unit test
 	}
 	return 0;
 }
@@ -229,6 +230,28 @@ int string_to_int_test(char *string, int base, int result) {
 	{
 		printf("Test fallito, %s in base %d dovrebbe diventare %d in base 10, invece risulta %d\n", string, base, result, string_to_int(string, base));
 		return -1;
+	}
+
+	return 0;
+}
+
+int int_to_string_test(unsigned int integer, unsigned int base, char *result) {
+	int length = 0, i;
+	char number_array[MAX_LENGTH_ARRAY];
+
+	int_to_string(integer, number_array, base);
+
+	while (result[length] != '\0') {
+		length++;													
+	}
+
+	for (i = 0; i < length; ++i)
+	{
+		if (number_array[length-i-1] != result[i])
+		{
+			printf("Test fallito, %i in base %i dovrebbe essere %s, invece risulta %s\n", integer, base, result, number_array);
+			return -1;
+		}
 	}
 
 	return 0;

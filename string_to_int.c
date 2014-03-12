@@ -99,7 +99,7 @@ unsigned int string_to_int(char *string, unsigned int base) {
 				tmp -= 13;											// Oltre al 48 tolto prima  vanno tolti altri 13 perché ci sono dei caratteri che non ci interessano
 			}
 			for (j = 0; j < length-i-1; ++j) {
-				tmp = tmp * base;									// Formula di conversione di un numero da base x a numero matematico (ulteriori spiegazioni nel file)
+				tmp = tmp * base;									// Formula di conversione di un numero da base x a numero matematico
 			} 
 			result += tmp;
 			tmp = 1;												// Reimpostiamo il tmp a 1;

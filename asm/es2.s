@@ -1,6 +1,10 @@
+# Esercitazione numero 2
+# Corso di architettura degli elaboratori
+# Giovanni Bucci		giovanni01.bucci@student.unife.it
+# Riccardo Padovani		riccardo.padovani@student.unife.it
+
 .text
 .globl main
-
 
 n_prime:
 
@@ -48,3 +52,29 @@ S_END:
 
 	move $v0, $s0							# stampa il numero richiesto
 	jr $ra
+
+
+# Criterio di convergenza di Mandelbrot
+criterio_convergenza:
+	se |z| > 2 esce con fallimento
+	se i = 100  esce con successo
+	incrementa i 
+	z = z * z + c
+
+# Prende in input due numeri complessi, presenti in $f5 e $f6, li somma e mette il risultato in $f7 
+c_add:
+	add.d 0($f7), 0($f5), 0($f6)
+	add.d 4($f7), 4($f5), 4($f6)	
+	jr $ra
+
+# Prende in input due numeri complessi, presenti in $f5 e $f6, li moltiplica e mette il risultato in $f7
+c_mul:
+	mul.d 0($f7), 0($f5), 0($f6)
+	mul.d 4($f7), 4($f5), 4($f6)
+	j $ra
+
+# Prende in input un numero complesso, presente in $f7, e la modifica nella sua norma
+c_norma:
+	fabs 0($f7), 0($f7)
+	fabs 4($f7), 4($f7)
+	j $ra

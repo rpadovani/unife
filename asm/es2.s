@@ -10,7 +10,7 @@ n_prime:
 
 	move $t4, $a0
 	or $t5, $zero, 2						# numero
-	or $t6, $zero, 2						# i = 1
+	or $t6, $zero, 2						# i = 2
 	or $t1, $zero, $zero 					# resto = 0 
 	or $t2, $zero, $zero					# flag = 0
 	or $t3, $zero, 1						# lista_primi = 1 ( l' 1 è un numero primo )
@@ -55,6 +55,7 @@ S_END:
 
 
 # Criterio di convergenza di Mandelbrot
+# Il nostro numero è conservato in f7
 criterio_convergenza:
 	se |z| > 2 esce con fallimento
 	se i = 100  esce con successo
@@ -62,19 +63,29 @@ criterio_convergenza:
 	z = z * z + c
 
 # Prende in input due numeri complessi, presenti in $f5 e $f6, li somma e mette il risultato in $f7 
+# x1 + x2, y1 + y2
 c_add:
-	add.d 0($f7), 0($f5), 0($f6)
-	add.d 4($f7), 4($f5), 4($f6)	
+	add.s 0($f7), 0($f5), 0($f6) # x1 + x2
+	add.s 4($f7), 4($f5), 4($f6) # y1 + y2
 	jr $ra
 
 # Prende in input due numeri complessi, presenti in $f5 e $f6, li moltiplica e mette il risultato in $f7
+# f8 variabile d'appoggio
+# x1 * x2 - y1 * y2, x1 * y2 + y1 * x2
 c_mul:
-	mul.d 0($f7), 0($f5), 0($f6)
-	mul.d 4($f7), 4($f5), 4($f6)
+	# Elemento reale x1 * x2 - y1 * y2
+	mul.s 0($f7), 0($f5), 0($f6)	# x1 * x2
+	mul.s 0($f8), 4($f5), 4($f6)	# y1 * y2
+	sub.s 0($f7), 0($f7), 0($f8)	# x1 * x2 - y1 * y2
+
+	# Elemento immaginario x1 * y2 + y1 * x2
+	mul.s 4($f7), 0($f5), 4($f6)	# x1 * y2
+	mul.s 0($f8), 4($f5), 0($f6) 	# x2 * y1
+	add.s 4($f7), 4($f7), 0($f8)	# x1 * y2 + x2 * y1
+
 	j $ra
 
 # Prende in input un numero complesso, presente in $f7, e la modifica nella sua norma
 c_norma:
-	fabs 0($f7), 0($f7)
-	fabs 4($f7), 4($f7)
+	# sqrt(x ^ 2 + y ^ 2)
 	j $ra

@@ -2,19 +2,8 @@
 # Corso di architettura degli elaboratori
 # Giovanni Bucci		giovanni01.bucci@student.unife.it
 # Riccardo Padovani		riccardo.padovani@student.unife.it
-.data
-	f1: .float 0.0
-	f2: .float 0.0
-
 .text
 .globl main
-
-main:
-	la $a0, f2
-	addi $a0, $a0, -4
-	la $a0, f1
-
-	j m_converge
 
 n_prime:
 	move $t4, $a0	
@@ -46,6 +35,7 @@ incr_index:
 
 s_end:
 	move $v0, $t5							# copia il numero richiesto nel registro v0
+	jr $ra
 
 
 # criterio di convergenza di mandelbrot
@@ -54,13 +44,14 @@ m_converge:
 	lwc1 $f10, 0($a0)
 	lwc1 $f11, 4($a0) 
 
+	addi $sp, $sp, -4		# creiamo spazio sullo stack pointer
+	sw $ra, -4($sp)			# salviamo il return address
+
  	li $t1, 1				# contatore
  	li.s $f1, 2.0			# costante 
  	
  	li.s $f16, 0.0			# Z(0), parte reale
  	li.s $f17, 0.0			# Z(0), parte immaginaria
-
- 	j loop_converge
 
 loop_converge:
 	beq $t1, 100, uscita_successo	# se l'indice è arrivato a 100 usciamo con successo
@@ -89,26 +80,27 @@ loop_converge:
 	mov.s $f2, $f6
 	mov.s $f3, $f7
 
-	jal c_norma			# calcolo la norma
+	jal c_norma				# calcolo la norma
 
-	c.lt.s $f0, $f1		# controlliamo che il risultato della norma sia < 2
+	c.lt.s $f0, $f1			# controlliamo che il risultato della norma sia < 2
 	bc1f uscita_fallimento	# se è maggiore usicamo con fallimento
 
-	addiu $t1, $t1, 1 	# altrimenti aumentiamo il contatore
+	addiu $t1, $t1, 1 		# altrimenti aumentiamo il contatore
 
-	j loop_converge 	# e ricominciamo il ciclo
+	j loop_converge 		# e ricominciamo il ciclo
 
 uscita_successo:
-	li $t7, 1
-	li $v0, 10
-	syscall
-	#AGGIUNGERE EXIT
+	li $v0, 1
+	j exit
 
 uscita_fallimento:
-	li $t7, 2
-	li $v0, 10
-	syscall
-	#AGGIUNGERE EXIT
+	li $v0, 0
+	j exit
+
+exit:
+	lw $ra, -4($sp)			# ripristiniamo il return address
+	addi $sp, $sp, 4		# riprisitiniamo lo stack pointer	
+	jr $ra
 
 # c_add
 # prende in input due numeri complessi, presenti in 

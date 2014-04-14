@@ -46,10 +46,16 @@ criterio_convergenza:
 #qt
 # Prende in input due numeri complessi, presenti in $f5 e $f6, li somma e mette il risultato in $f7 
 # x1 + x2, y1 + y2
-# c_add:
-# 	add.s 0($f7), 0($f5), 0($f6) # x1 + x2
-# 	add.s 4($f7), 4($f5), 4($f6) # y1 + y2
-# 	jr $ra
+c_add:
+	lw $f1, 0($f5)
+	lw $f11, 0($f6)
+	add.s $f12, $f10, $f11 # x1 + x2
+	sw $f12, 0($f7)
+	lw $f10, 4($f5)
+	lw $f11, 4($f6)
+	add.s $f12, $f10, $f11 # x1 + x2
+	sw $f12, 4($f7)
+	jr $ra
 
 # # Prende in input due numeri complessi, presenti in $f5 e $f6, li moltiplica e mette il risultato in $f7
 # # f8 variabile d'appoggio

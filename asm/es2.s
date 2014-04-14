@@ -43,37 +43,45 @@ S_END:
 # Il nostro numero è conservato in f7
 criterio_convergenza:
 	#se |z| > 2 esce con fallimento
-#qt
-# Prende in input due numeri complessi, presenti in $f5 e $f6, li somma e mette il risultato in $f7 
+
+# c_add
+# Prende in input due numeri complessi, presenti in 
+# $f2 (e $f3 la sua parte immaginaria) e 
+# $f4 (e $f5 la sua parte immaginaria), li somma e mette 
+# il risultato in $f6 (e $f7 la parte immaginaria) 
 # x1 + x2, y1 + y2
 c_add:
-	lw $f1, 0($f5)
-	lw $f11, 0($f6)
-	add.s $f12, $f10, $f11 # x1 + x2
-	sw $f12, 0($f7)
-	lw $f10, 4($f5)
-	lw $f11, 4($f6)
-	add.s $f12, $f10, $f11 # x1 + x2
-	sw $f12, 4($f7)
+	add.d $f2, $f4, $f6 # somma dei due numeri complessi
 	jr $ra
 
-# # Prende in input due numeri complessi, presenti in $f5 e $f6, li moltiplica e mette il risultato in $f7
-# # f8 variabile d'appoggio
-# # x1 * x2 - y1 * y2, x1 * y2 + y1 * x2
-# c_mul:
-# 	# Elemento reale x1 * x2 - y1 * y2
-# 	mul.s 0($f7), 0($f5), 0($f6)	# x1 * x2
-# 	mul.s 0($f8), 4($f5), 4($f6)	# y1 * y2
-# 	sub.s 0($f7), 0($f7), 0($f8)	# x1 * x2 - y1 * y2
+# c_mul
+# Prende in input due numeri complessi, presenti in 
+# $f2 (e $f3 la sua parte immaginaria)  e
+# $f4 (e $f5 la sua parte immaginaria) li moltiplica e mette 
+# il risultato in $f6 (e $f7 la parte immaginaria)
+# $f8 variabile d'appoggio
+# x1 * x2 - y1 * y2, x1 * y2 + y1 * x2
+c_mul:
+	#Elemento reale x1 * x2 - y1 * y2
+	mul.s $f6, $f2, $f4		# x1 * x2
+	mul.s $f7, $f3, $f5		# y1 * y2
+	sub.s $f6, $f6, $f7		# x1 * x2 - y1 * y2
 
-# 	# Elemento immaginario x1 * y2 + y1 * x2
-# 	mul.s 4($f7), 0($f5), 4($f6)	# x1 * y2
-# 	mul.s 0($f8), 4($f5), 0($f6) 	# x2 * y1
-# 	add.s 4($f7), 4($f7), 0($f8)	# x1 * y2 + x2 * y1
+	# Elemento immaginario x1 * y2 + y1 * x2
+	mul.s $f7, $f2, $f5		# x1 * y2
+	mul.s $f8, $f4, $f3 	# x2 * y1
+	add.s $f7, $f7, $f8		# x1 * y2 + x2 * y1
 
-# 	j $ra
+	j $ra
 
-# # Prende in input un numero complesso, presente in $f7, e la modifica nella sua norma
-# c_norma:
-# 	# sqrt(x ^ 2 + y ^ 2)
-# 	j $ra
+# Prende in input un numero complesso, presente in 
+# $f2 (e $f3 la sua parte immaginaria),  e ne calcola la norma in
+# $f0 (con la radice quadrata la parte immaginaria sparisce)
+# sqrt(x ^ 2 + y ^ 2)
+c_norma:
+	mul.s $f2, $f2, $f2		# x ^ 2
+	mul.s $f3, $f3, $f3		# y ^ 2
+	add.s $f0, $f2, $f3		# x ^ 2 + y ^ 2
+
+	sqrt.s $f0, $f0
+	j $ra

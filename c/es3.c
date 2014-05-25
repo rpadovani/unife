@@ -3,46 +3,27 @@
 #include <string.h>
 #include <time.h>
 
-#define MAX 15
+#define MAX 1048576         // 2^20
+#define RANGE_RANDOM 1000   // Range per i valori da inserire nelle liste e negli array
+
+typedef struct lista lista;
 
 struct lista {
 	int numero;
-	struct lista *next;
+	lista *next;
 };
 
+void inizializza_lista_fondo(lista *testa);
 
-void crea_prima_lista( struct lista **testa ) {
+
+
+void crea_seconda_lista( lista **testa ) {
 	int i, val = 0;
-	struct lista *p, *nuovo;
+	lista *p, *nuovo;
 	srand(time(NULL)); 
 
 	for (i=0; i<MAX; i++) {
-		nuovo = (struct lista*) malloc (sizeof (struct lista));
-		
-		val = rand() % MAX;
-
-		nuovo->numero = val;
-		nuovo->next = NULL;
-
-		if (*testa == NULL) {
-			*testa = nuovo;
-			p = *testa;
-		} else {
-			p->next = nuovo;
-			p = p->next;
-		}
-	}
-
-}
-
-
-void crea_seconda_lista( struct lista **testa ) {
-	int i, val = 0;
-	struct lista *p, *nuovo;
-	srand(time(NULL)); 
-
-	for (i=0; i<MAX; i++) {
-		nuovo = (struct lista*) malloc (sizeof (struct lista));
+		nuovo = (lista*) malloc (sizeof (lista));
 		
 		nuovo->numero = 0;
 		nuovo->next = NULL;
@@ -59,9 +40,9 @@ void crea_seconda_lista( struct lista **testa ) {
 }
 
 
-void stampa_lista( struct lista **testa ) {
+void stampa_lista( lista **testa ) {
 	int i, val;
-	struct lista *p;
+	lista *p;
 	p = *testa;
 
 	while (p->next != NULL) {
@@ -71,9 +52,9 @@ void stampa_lista( struct lista **testa ) {
 	printf("%d \n\n", p->numero);
 }
 
-void append (struct lista **testa) {
+void append (lista **testa) {
 	int val = 0;
-	struct lista *p, *nuovo;
+	lista *p, *nuovo;
 
 	p = *testa;
 
@@ -84,7 +65,7 @@ void append (struct lista **testa) {
 	printf("Inserisci il nuovo numero da inserire in coda alla prima_lista: ");
 	scanf("%d", &val);
 
-	nuovo = (struct lista*) malloc ( sizeof (struct lista));
+	nuovo = (lista*) malloc ( sizeof (lista));
 
 	nuovo->numero = val;
 	nuovo->next = NULL;
@@ -93,7 +74,7 @@ void append (struct lista **testa) {
 	
 }
 
-void cancella (struct lista **testa) {
+void cancella (lista **testa) {
 
 
 	/* PROBLEMINO: SE CANCELLO
@@ -127,7 +108,7 @@ int *crea_primo_array(int array[MAX]) {
 
 	for (i=0; i<MAX; i++) {
 
-		val = rand() % MAX;
+		val = rand() % RANGE_RANDOM;
 		array[i] = val;
 	}
 
@@ -164,16 +145,16 @@ void stampa_primo_array(int array[MAX]) {
 	}
 }
 
-void riempi_seconda_lista (struct lista **testa) {
+void riempi_seconda_lista (lista **testa) {
 
 	int i, j = 0, val = 0;
-	struct lista *p, *nuovo;
+	lista *p, *nuovo;
 	srand(time(NULL)); 
 
 	p = *testa;
 
 	for (i=1; i<=MAX; i++) {
-		nuovo = (struct lista*) malloc (sizeof (struct lista));
+		nuovo = (lista*) malloc (sizeof (lista));
 
 		val = rand() % i;
 
@@ -195,9 +176,9 @@ void riempi_seconda_lista (struct lista **testa) {
 
 }
 
-int main() {
+int main(void) {
 
-	struct lista *testa,*testa2, *nuovo;
+	lista *testa,*testa2, *nuovo;
 
 	int array[MAX];
 	int array2[MAX];
@@ -207,7 +188,7 @@ int main() {
 
 	printf("Questi sono la prima lista ed il primo array: \n\n");
 
-	crea_prima_lista (&testa);
+	inizializza_lista_fondo (testa);
 	crea_primo_array(array);
 	stampa_lista (&testa);
 	stampa_primo_array(array);
@@ -224,4 +205,29 @@ int main() {
 
 
 	return 0;
+}
+
+void inizializza_lista_fondo(lista *testa) {
+    int i, val;
+    // *p fornisce il puntatore per creare la lista
+    // *nuovo è una variabile temporanea per inserire i valori
+    lista *p, *nuovo;
+    srand(time(NULL)); 
+
+    for (i=0; i<MAX; i++) {
+        nuovo = (lista *) malloc (sizeof (lista));
+
+        val = rand() % RANGE_RANDOM;
+
+        nuovo->numero = val;
+        nuovo->next = NULL;
+
+        if (testa == NULL) {
+            testa = nuovo;
+            p = testa;
+        } else {
+            p->next = nuovo;
+            p = p->next;
+        }
+    }
 }

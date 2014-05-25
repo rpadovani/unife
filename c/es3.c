@@ -58,19 +58,8 @@ void crea_seconda_lista( struct lista **testa ) {
 
 }
 
-void stampa_seconda_lista( struct lista **testa ) {
-	int i, val;
-	struct lista *p;
-	p = *testa;
 
-	while (p->next != NULL) {
-		printf("%d --> ", p->numero);
-		p = p->next;
-	}
-	printf("%d \n\n", p->numero);
-}
-
-void stampa_prima_lista( struct lista **testa ) {
+void stampa_lista( struct lista **testa ) {
 	int i, val;
 	struct lista *p;
 	p = *testa;
@@ -220,7 +209,7 @@ int main() {
 
 	crea_prima_lista (&testa);
 	crea_primo_array(array);
-	stampa_prima_lista (&testa);
+	stampa_lista (&testa);
 	stampa_primo_array(array);
 
 	printf("\n\n\n\n");
@@ -230,7 +219,7 @@ int main() {
 	crea_seconda_lista (&testa2);
 	crea_secondo_array(array2);
 	riempi_seconda_lista(&testa2);
-	stampa_seconda_lista (&testa2);
+	stampa_lista (&testa2);
 	stampa_primo_array(array2);
 
 

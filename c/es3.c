@@ -3,8 +3,8 @@
 #include <string.h>
 #include <time.h>
 
-#define MAX 1048576         // 2^20
-#define RANGE_RANDOM 1000   // Range per i valori da inserire nelle liste e negli array
+#define MAX 104         // 2^20
+#define RANGE_RANDOM 100   // Range per i valori da inserire nelle liste e negli array
 
 typedef struct lista lista;
 
@@ -13,7 +13,7 @@ struct lista {
 	lista *next;
 };
 
-void inizializza_lista_fondo(lista *testa);
+void inizializza_lista_fondo(lista **testa);
 
 
 
@@ -188,7 +188,7 @@ int main(void) {
 
 	printf("Questi sono la prima lista ed il primo array: \n\n");
 
-	inizializza_lista_fondo (testa);
+	inizializza_lista_fondo (&testa);
 	crea_primo_array(array);
 	stampa_lista (&testa);
 	stampa_primo_array(array);
@@ -207,7 +207,7 @@ int main(void) {
 	return 0;
 }
 
-void inizializza_lista_fondo(lista *testa) {
+void inizializza_lista_fondo(lista **testa) {
     int i, val;
     // *p fornisce il puntatore per creare la lista
     // *nuovo è una variabile temporanea per inserire i valori
@@ -222,9 +222,9 @@ void inizializza_lista_fondo(lista *testa) {
         nuovo->numero = val;
         nuovo->next = NULL;
 
-        if (testa == NULL) {
-            testa = nuovo;
-            p = testa;
+        if (*testa == NULL) {
+            *testa = nuovo;
+            p = *testa;
         } else {
             p->next = nuovo;
             p = p->next;

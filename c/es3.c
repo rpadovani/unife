@@ -3,7 +3,7 @@
 #include <string.h>
 #include <time.h>
 
-#define MAX 10        // 2^20
+#define MAX 104850        // 2^20
 #define RANGE_RANDOM 10   // Range per i valori da inserire nelle liste e negli array
 
 typedef struct lista lista;
@@ -47,7 +47,6 @@ int main(void) {
 
 	crea_seconda_lista (&testa2);
 	//array2 = crea_secondo_array(array2);
-	stampa_lista (&testa2);
 	//stampa_array(array2);
 
 
@@ -79,32 +78,39 @@ void inizializza_lista_fondo(lista **testa) {
 }
 
 void crea_seconda_lista( lista **testa ) {
-	int i,j = 0, val = 0, pos;
-	lista *p, *nuovo;
+    clock_t start = clock();
 
-	for (i=0; i<MAX; i++) {
-		nuovo = (lista*) malloc (MAX * sizeof (lista));
+    int i,j = 0, val = 0, pos;
+    lista *p, *nuovo;
 
-		nuovo->numero = rand() % RANGE_RANDOM;
-		nuovo->next = NULL;
+    for (i=0; i<MAX; i++) {
+        nuovo = (lista*) malloc (MAX * sizeof (lista));
 
-		if (*testa == NULL) {
-			*testa = nuovo;
-			p = *testa;
-		} else {
-			j = 0;
-			p = *testa;
-			pos = rand() % i;
-			printf("%d\n", pos);
-			while (j<i-1) {
-				p = p->next;
-				j++;
-			}
-			nuovo->next = p->next;
-			p->next = nuovo;
-		}
-		stampa_lista(testa);
-	}
+        nuovo->numero = rand() % RANGE_RANDOM;
+        nuovo->next = NULL;
+
+        if (*testa == NULL) {
+            *testa = nuovo;
+            p = *testa;
+        } else {
+            j = 1;
+            p = *testa;
+            pos = rand() % i + 1;
+            if (pos == 0) {
+                nuovo->next = *testa;
+                *testa = nuovo;
+            } else {
+                while (j<pos) {
+                    p = p->next;
+                    j++;
+                }
+                nuovo->next = p->next;
+                p->next = nuovo;
+            }
+        }
+    }
+    int cpu_time_spent = clock() - start;
+    printf("Time spent in creation of second list: %i\n", cpu_time_spent);
 
 }
 

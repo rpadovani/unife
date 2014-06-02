@@ -41,7 +41,7 @@ s_end:
 # criterio di convergenza di mandelbrot
 # il nostro numero è conservato in f7
 m_converge:
-	lwc1 $f10, 0($a0)
+	lwc1 $f10, 0($a0)	
 	lwc1 $f11, 4($a0) 
 
 	addi $sp, $sp, -4		# creiamo spazio sullo stack pointer

@@ -4,9 +4,9 @@
 main:
 
 	addi $s0, $zero, 7
-	addi $s1, $zero, 2			# i = 2
-	or $t2, $zero, 2			# flag = 2
-	or $t3, $zero, $zero		# resto = 0
+	addi $s1, $zero, 2					# i = 2
+	or $t2, $zero, 2					# flag = 2
+	or $t3, $zero, $zero				# resto = 0
 	slt $t0, $s0, $s1
 	beq $t0, 1, L_END
 	beq $s0, $s1, S_END

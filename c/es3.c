@@ -20,9 +20,11 @@ void accedi_lista_casuale(lista **testa);
 void stampa_lista( lista **testa );
 void append (lista **testa);
 void cancella (lista **testa);
-int *crea_primo_array(int *array);
-int *crea_secondo_array(int *array);
-void stampa_array(int *array);
+int *inizializza_array_sequenziale(int *array);
+int *inizializza_array_casuale(int *array);
+void accedi_array_sequenziale(int *array);
+void accedi_array_casuale(int *array);
+
 
 int main(void) {
 
@@ -37,23 +39,27 @@ int main(void) {
 	lista_casuale = NULL;
 
 	inizializza_lista_sequenziale(&lista_sequenziale);
-        inizializza_lista_casuale(&lista_casuale);
-	array = crea_primo_array(array);
-	array2 = crea_secondo_array(array2);
+    inizializza_lista_casuale(&lista_casuale);
+	array = inizializza_array_sequenziale(array);
+	array2 = inizializza_array_casuale(array2);
 
-        accedi_lista_sequenziale(&lista_sequenziale);
-        accedi_lista_casuale(&lista_sequenziale);
-        accedi_lista_sequenziale(&lista_casuale);
-        accedi_lista_casuale(&lista_casuale);
+    accedi_lista_sequenziale(&lista_sequenziale);
+    accedi_lista_casuale(&lista_sequenziale);
+    accedi_lista_sequenziale(&lista_casuale);
+    accedi_lista_casuale(&lista_casuale);
 
-	stampa_array(array);
-	stampa_array(array2);
+	accedi_array_sequenziale(array);
+    accedi_array_casuale(array);
+	accedi_array_sequenziale(array2);
+    accedi_array_casuale(array2);
 
 
 	return 0;
 }
 
+
 void inizializza_lista_sequenziale(lista **testa) {
+    clock_t start = clock();
     int i, val;
     // *p fornisce il puntatore per creare la lista
     // *nuovo è una variabile temporanea per inserire i valori
@@ -75,6 +81,9 @@ void inizializza_lista_sequenziale(lista **testa) {
             p = p->next;
         }
     }
+    int cpu_time_spent = clock() - start;
+    printf("Tempo impiegato nella creazione della lista sequenziale : %i\n", cpu_time_spent);
+
 }
 
 void inizializza_lista_casuale( lista **testa ) {
@@ -133,7 +142,7 @@ void accedi_lista_sequenziale(lista **testa) {
     }
 
     int cpu_time_spent = clock() - start;
-    printf("Tempo impiegato nell'accesso sequenziale alla lista: %i\n", cpu_time_spent);
+    printf("Tempo impiegato nell'accesso alla lista in modo sequenziale: %i\n", cpu_time_spent);
 }
 
 /**
@@ -170,7 +179,7 @@ void accedi_lista_casuale(lista **testa) {
 
     // Stampiamo il tempo totale di accesso alla lista
     int cpu_time_spent = clock() - start;
-    printf("Tempo impiegato nell'accesso casuale alla lista: %i\n", cpu_time_spent);
+    printf("Tempo impiegato per l' accesso alla lista in modo casuale: %i\n", cpu_time_spent);
 }
 
 void append (lista **testa) {
@@ -222,8 +231,8 @@ void cancella (lista **testa) {
 	}
 }
 
-int *crea_primo_array(int *array) {
- 
+int *inizializza_array_sequenziale(int *array) {
+    clock_t start = clock();
 	int val, i;
 
 	array = (int *) malloc ( MAX * sizeof(int));
@@ -234,11 +243,14 @@ int *crea_primo_array(int *array) {
 		array[i] = val;
 	}
 
+    int cpu_time_spent = clock() - start;
+    printf("Tempo impiegato per l' inizializzazione dell' array in modo sequenziale: %i\n", cpu_time_spent);
+
 	return array;
 
 }
 
-int *crea_secondo_array(int *array) {
+int *inizializza_array_casuale(int *array) {
 	clock_t start = clock();
 	int i, pos, num_el_corr = 1;
 
@@ -256,18 +268,32 @@ int *crea_secondo_array(int *array) {
 	}
 
 	int cpu_time_spent = clock() - start;
-    printf("Time spent in creation of second array: %i\n", cpu_time_spent);
+    printf("Tempo impiegato per l' inizializzazione dell' array in modo casuale: %i\n", cpu_time_spent);
 
 	return array;
 
 }
 
-void stampa_array(int *array) {
-
-	int i;
+void accedi_array_casuale( int *array ) {
+    clock_t start = clock();
+	int pos, somma = 0, i;
 
 	for (i=0; i<MAX; i++) {
-		printf("[%d] %d\n", i+1, array[i]);
+		pos = rand() % RANGE_RANDOM;
+		pos += array[pos];
 	}
+    int cpu_time_spent = clock() - start;
+    printf("Tempo impiegato per l' accesso all' array in modo casuale: %i\n", cpu_time_spent);
+}
+
+void accedi_array_sequenziale(int *array) {
+    clock_t start = clock();
+	int i, somma;
+
+	for (i=0; i<MAX; i++) {
+		somma += array[i];
+	}
+    int cpu_time_spent = clock() - start;
+    printf("Tempo impiegato per l' accesso all' array in modo sequenziale: %i\n", cpu_time_spent);
 }
 

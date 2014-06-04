@@ -13,8 +13,8 @@ struct lista {
 	lista *next;
 };
 
-void inizializza_lista_fondo(lista **testa);
-void crea_seconda_lista( lista **testa );
+void inizializza_lista_sequenziale(lista **testa);
+void inizializza_lista_casuale( lista **testa );
 void accedi_lista_sequenziale(lista **testa);
 void accedi_lista_casuale(lista **testa);
 void stampa_lista( lista **testa );
@@ -25,31 +25,27 @@ int *crea_secondo_array(int *array);
 void stampa_array(int *array);
 
 int main(void) {
-
 	srand(time(NULL));
 
-	lista *testa,*testa2, *nuovo;
+	lista *lista_sequenziale, *lista_casuale;
 
 	int *array;
 	int *array2;
 
-	testa = NULL;
-	testa2 = NULL;
+	lista_sequenziale = NULL;
+	lista_casuale = NULL;
 
-	printf("Questi sono la prima lista ed il primo array: \n\n");
-
-	// inizializza_lista_fondo (&testa);
+	inizializza_lista_sequenziale(&lista_sequenziale);
+        inizializza_lista_casuale(&lista_casuale);
 	// array = crea_primo_array(array);
 	// stampa_lista (&testa);
 	//stampa_array(array);
 
-	printf("\n\n\n\n");
-
-	printf("Questi sono la seconda lista ed il secondo array: \n\n");
-
-	crea_seconda_lista (&testa2);
-        accedi_lista_sequenziale(&testa2);
-        accedi_lista_casuale(&testa2);
+        accedi_lista_sequenziale(&lista_sequenziale);
+        accedi_lista_casuale(&lista_sequenziale);
+	
+        accedi_lista_sequenziale(&lista_casuale);
+        accedi_lista_casuale(&lista_casuale);
 	//array2 = crea_secondo_array(array2);
 	//stampa_array(array2);
 
@@ -57,7 +53,7 @@ int main(void) {
 	return 0;
 }
 
-void inizializza_lista_fondo(lista **testa) {
+void inizializza_lista_sequenziale(lista **testa) {
     int i, val;
     // *p fornisce il puntatore per creare la lista
     // *nuovo è una variabile temporanea per inserire i valori
@@ -81,7 +77,7 @@ void inizializza_lista_fondo(lista **testa) {
     }
 }
 
-void crea_seconda_lista( lista **testa ) {
+void inizializza_lista_casuale( lista **testa ) {
     clock_t start = clock();
 
     int i,j = 0, val = 0, pos;

@@ -3,7 +3,7 @@
 #include <string.h>
 #include <time.h>
 
-#define MAX 10       // 2^20
+#define MAX 10000       // 2^20
 #define RANGE_RANDOM 10   // Range per i valori da inserire nelle liste e negli array
 
 typedef struct lista lista;
@@ -38,17 +38,16 @@ int main(void) {
 
 	inizializza_lista_sequenziale(&lista_sequenziale);
         inizializza_lista_casuale(&lista_casuale);
-	// array = crea_primo_array(array);
-	// stampa_lista (&testa);
-	//stampa_array(array);
+	array = crea_primo_array(array);
+	array2 = crea_secondo_array(array2);
 
         accedi_lista_sequenziale(&lista_sequenziale);
         accedi_lista_casuale(&lista_sequenziale);
-	
         accedi_lista_sequenziale(&lista_casuale);
         accedi_lista_casuale(&lista_casuale);
-	//array2 = crea_secondo_array(array2);
-	//stampa_array(array2);
+
+	stampa_array(array);
+	stampa_array(array2);
 
 
 	return 0;
@@ -90,47 +89,51 @@ void inizializza_lista_casuale( lista **testa ) {
         nuovo->numero = rand() % RANGE_RANDOM;
         nuovo->next = NULL;
 
-        if (*testa == NULL) {								// se stiamo inserendo il primo numero
-            *testa = nuovo;									// testa è uguale al nuovo puntatore
+        if (*testa == NULL) {	        // se stiamo inserendo il primo numero
+            *testa = nuovo;	        // testa è uguale al nuovo puntatore
             p = *testa;
-        } else {
-            j = 1;											// altrimenti utilizzo un contatore
-            p = *testa;										// per scorrere la lista
-            pos = rand() % i + 1;							// creo un numero tra 0 e il numero di elementi
-            if (pos == 0) {									// se pos == 0
-                nuovo->next = *testa;						// inserisco il nuovo numero
-                *testa = nuovo;								// in testa
-            } else {
-                while (j<pos) {								// altrimenti scorro finchè non arrivo alla posizione ineressata
+        } 
+        else {
+            j = 1;              	// altrimenti utilizzo un contatore
+            p = *testa;			// per scorrere la lista
+            pos = rand() % i + 1;	// creo un numero tra 0 e il numero di elementi
+            
+            if (pos == 0) {		
+                nuovo->next = *testa;	// inserisco il nuovo numero
+                *testa = nuovo;		// in testa
+            } 
+            else {
+                while (j<pos) {		// altrimenti scorro finchè non arrivo alla posizione ineressata
                     p = p->next;							
-                    j++;									// incremento il contatore
+                    j++;		// incremento il contatore
                 }
-                nuovo->next = p->next;						// il nuovo numero punterà al successivo del vecchio numero
-                p->next = nuovo;							// ed il vecchio numero punterà a quello numero
+                nuovo->next = p->next;	// il nuovo numero punterà al successivo del vecchio numero
+                p->next = nuovo;	// ed il vecchio numero punterà a quello numero
             }
         }
     }
     int cpu_time_spent = clock() - start;
-    printf("Time spent in creation of second list: %i\n", cpu_time_spent);
+    printf("Tempo impiegato nella creazione della lista casuale : %i\n", cpu_time_spent);
+}
 
 /**
  * La funzione prende in input un puntatore alla testa di una lista
  * e accede in maniera sequenziale ai valori, stampadoli uno per uno
  */
 void accedi_lista_sequenziale(lista **testa) {
+    clock_t start = clock();
     lista *puntatore;
     puntatore = *testa;
     int totale = 0;     // Variabile in cui salvo la somma di tutti i valori a cui accedo
 
-    printf("Stampa della lista in accesso sequenziale: \n");
     // Finché non arriviamo a un puntatore invalido, ne stampiamo il valore
     while (puntatore != NULL) {
-        printf("%d ", puntatore->numero);
         totale += puntatore->numero;
         puntatore = puntatore->next;
     }
 
-    printf("\nSomma totale dei valori a cui si è acceduto %d \n", totale);
+    int cpu_time_spent = clock() - start;
+    printf("Tempo impiegato nell'accesso sequenziale alla lista: %i\n", cpu_time_spent);
 }
 
 /**
@@ -139,12 +142,11 @@ void accedi_lista_sequenziale(lista **testa) {
  * scegliendo a quali valori accedere in maniera completamente casuale
  */
 void accedi_lista_casuale(lista **testa) {
+    clock_t start = clock();
     lista *puntatore;
     puntatore = *testa;
     int totale = 0;     // Variabile in cui salvo la somma di tutti i valori a cui accedo
     int i, pos, j;
-
-    printf("Stampa della lista in accesso casuale: \n");
 
     // MAX rappresenta la grandezza massima della lista, noi accediamo a MAX
     // elementi della lista
@@ -163,11 +165,12 @@ void accedi_lista_casuale(lista **testa) {
             j++;
         }
 
-        printf("%d ", puntatore->numero);
         totale += puntatore->numero;
     }
 
-    printf("\nSomma totale dei valori a cui si è acceduto %d \n", totale);
+    // Stampiamo il tempo totale di accesso alla lista
+    int cpu_time_spent = clock() - start;
+    printf("Tempo impiegato nell'accesso casuale alla lista: %i\n", cpu_time_spent);
 }
 
 void append (lista **testa) {

@@ -15,6 +15,7 @@ struct lista {
 
 void inizializza_lista_fondo(lista **testa);
 void crea_seconda_lista( lista **testa );
+void accedi_lista_sequenziale(lista **testa);
 void stampa_lista( lista **testa );
 void append (lista **testa);
 void cancella (lista **testa);
@@ -45,9 +46,10 @@ int main(void) {
 
 	printf("Questi sono la seconda lista ed il secondo array: \n\n");
 
-	//crea_seconda_lista (&testa2);
-	array2 = crea_secondo_array(array2);
-	stampa_array(array2);
+	crea_seconda_lista (&testa2);
+        accedi_lista_sequenziale(&testa2);
+	//array2 = crea_secondo_array(array2);
+	//stampa_array(array2);
 
 
 	return 0;
@@ -109,9 +111,26 @@ void crea_seconda_lista( lista **testa ) {
             }
         }
     }
+
     int cpu_time_spent = clock() - start;
     printf("Time spent in creation of second list: %i\n", cpu_time_spent);
+}
 
+/**
+ * La funzione prende in input un puntatore alla testa di una lista
+ * e accede in maniera sequenziale ai valori, stampadoli uno per uno
+ */
+void accedi_lista_sequenziale(lista **testa) {
+    lista *puntatore;
+    puntatore = *testa;
+
+    printf("Stampa della lista in accesso sequenziale: \n");
+    while (puntatore != NULL) {
+        printf("%d ", puntatore->numero);
+        puntatore = puntatore->next;
+    }
+
+    printf("\n");
 }
 
 

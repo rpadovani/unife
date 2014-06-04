@@ -17,9 +17,6 @@ void inizializza_lista_sequenziale(lista **testa);
 void inizializza_lista_casuale( lista **testa );
 void accedi_lista_sequenziale(lista **testa);
 void accedi_lista_casuale(lista **testa);
-void stampa_lista( lista **testa );
-void append (lista **testa);
-void cancella (lista **testa);
 int *inizializza_array_sequenziale(int *array);
 int *inizializza_array_casuale(int *array);
 void accedi_array_sequenziale(int *array);
@@ -27,7 +24,6 @@ void accedi_array_casuale(int *array);
 
 
 int main(void) {
-
 	srand(time(NULL));
 
 	lista *lista_sequenziale, *lista_casuale;
@@ -57,7 +53,6 @@ int main(void) {
 	return 0;
 }
 
-
 void inizializza_lista_sequenziale(lista **testa) {
     clock_t start = clock();
     int i, val;
@@ -82,8 +77,7 @@ void inizializza_lista_sequenziale(lista **testa) {
         }
     }
     int cpu_time_spent = clock() - start;
-    printf("Tempo impiegato nella creazione della lista sequenziale : %i\n", cpu_time_spent);
-
+    printf("Tempo impiegato per la creazione della lista sequenziale: %d\n", cpu_time_spent);
 }
 
 void inizializza_lista_casuale( lista **testa ) {
@@ -122,7 +116,7 @@ void inizializza_lista_casuale( lista **testa ) {
         }
     }
     int cpu_time_spent = clock() - start;
-    printf("Tempo impiegato nella creazione della lista casuale : %i\n", cpu_time_spent);
+    printf("Tempo impiegato per la creazione della lista casuale : %d\n", cpu_time_spent);
 }
 
 /**
@@ -142,7 +136,7 @@ void accedi_lista_sequenziale(lista **testa) {
     }
 
     int cpu_time_spent = clock() - start;
-    printf("Tempo impiegato nell'accesso alla lista in modo sequenziale: %i\n", cpu_time_spent);
+    printf("Tempo impiegato per l'accesso sequenziale alla lista: %d\n", cpu_time_spent);
 }
 
 /**
@@ -174,61 +168,14 @@ void accedi_lista_casuale(lista **testa) {
             j++;
         }
 
+        // Facciamo una piccola operazione per essere sicuri di evitare
+        // un'eccessiva ottimizzazione da parte del compilatore
         totale += puntatore->numero;
     }
 
     // Stampiamo il tempo totale di accesso alla lista
     int cpu_time_spent = clock() - start;
-    printf("Tempo impiegato per l' accesso alla lista in modo casuale: %i\n", cpu_time_spent);
-}
-
-void append (lista **testa) {
-	int val = 0;
-	lista *p, *nuovo;
-
-	p = *testa;
-
-	while (p->next != NULL) {
-		p = p->next;
-	}
-
-	printf("Inserisci il nuovo numero da inserire in coda alla prima_lista: ");
-	scanf("%d", &val);
-
-	nuovo = (lista*) malloc ( sizeof (lista));
-
-	nuovo->numero = val;
-	nuovo->next = NULL;
-
-	p->next = nuovo;
-	
-}
-
-void cancella (lista **testa) {
-
-
-	/* PROBLEMINO: SE CANCELLO
-	IL PRIMO NUMERO, va in SEG FAULT */
-
-	int val = 0;
-	struct lista *p, *precedente;
-
-	p = *testa;
-	precedente = p;
-
-	printf("Inserisci il numero da cancellare: ");
-	scanf("%d", &val);
-
-	while (p != NULL) {
-		if (p->numero != val) {
-			precedente = p;
-			p = p->next;
-		} else {
-			precedente->next = p->next;
-			free(p);
-			p = precedente->next;
-		}
-	}
+    printf("Tempo impiegato per l'accesso casuale alla lista: %d\n", cpu_time_spent);
 }
 
 int *inizializza_array_sequenziale(int *array) {

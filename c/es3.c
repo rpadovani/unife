@@ -16,6 +16,7 @@ struct lista {
 void inizializza_lista_fondo(lista **testa);
 void crea_seconda_lista( lista **testa );
 void accedi_lista_sequenziale(lista **testa);
+void accedi_lista_casuale(lista **testa);
 void stampa_lista( lista **testa );
 void append (lista **testa);
 void cancella (lista **testa);
@@ -48,6 +49,7 @@ int main(void) {
 
 	crea_seconda_lista (&testa2);
         accedi_lista_sequenziale(&testa2);
+        accedi_lista_casuale(&testa2);
 	//array2 = crea_secondo_array(array2);
 	//stampa_array(array2);
 
@@ -123,27 +125,54 @@ void crea_seconda_lista( lista **testa ) {
 void accedi_lista_sequenziale(lista **testa) {
     lista *puntatore;
     puntatore = *testa;
+    int totale = 0;     // Variabile in cui salvo la somma di tutti i valori a cui accedo
 
     printf("Stampa della lista in accesso sequenziale: \n");
+    // Finché non arriviamo a un puntatore invalido, ne stampiamo il valore
     while (puntatore != NULL) {
         printf("%d ", puntatore->numero);
+        totale += puntatore->numero;
         puntatore = puntatore->next;
     }
 
-    printf("\n");
+    printf("\nSomma totale dei valori a cui si è acceduto %d \n", totale);
 }
 
+/**
+ * La funzione prende in input un puntatore alla testa di una lista
+ * e accede a N valori della lista, dove N è il numero di elementi della lista
+ * scegliendo a quali valori accedere in maniera completamente casuale
+ */
+void accedi_lista_casuale(lista **testa) {
+    lista *puntatore;
+    puntatore = *testa;
+    int totale = 0;     // Variabile in cui salvo la somma di tutti i valori a cui accedo
+    int i, pos, j;
 
-void stampa_lista( lista **testa ) {
-	int i, val;
-	lista *p;
-	p = *testa;
+    printf("Stampa della lista in accesso casuale: \n");
 
-	while (p->next != NULL) {
-		printf("%d --> ", p->numero);
-		p = p->next;
-	}
-	printf("%d \n\n", p->numero);
+    // MAX rappresenta la grandezza massima della lista, noi accediamo a MAX
+    // elementi della lista
+    for (i = 0; i < MAX; i++) {
+        // Decidiamo a che posizione accedere
+        pos = rand() % MAX;
+
+        // Resettiamo il contatore e riniziamo a scorrere dalla testa
+        j = 0;
+        puntatore = *testa;
+
+        // Scorriamo la lista finché non arriviamo alla posizione che abbiamo
+        // deciso
+        while (j < pos) {
+            puntatore = puntatore->next;
+            j++;
+        }
+
+        printf("%d ", puntatore->numero);
+        totale += puntatore->numero;
+    }
+
+    printf("\nSomma totale dei valori a cui si è acceduto %d \n", totale);
 }
 
 void append (lista **testa) {

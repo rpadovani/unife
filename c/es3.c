@@ -32,26 +32,26 @@ int main(void) {
 
 	lista *lista_sequenziale, *lista_casuale;
 
-	int *array;
-	int *array2;
+	int *array_sequenziale;
+	int *array_casuale;
 
 	lista_sequenziale = NULL;
 	lista_casuale = NULL;
 
 	inizializza_lista_sequenziale(&lista_sequenziale);
     inizializza_lista_casuale(&lista_casuale);
-	array = inizializza_array_sequenziale(array);
-	array2 = inizializza_array_casuale(array2);
+	array_sequenziale = inizializza_array_sequenziale(array_sequenziale);
+	array_casuale = inizializza_array_casuale(array_casuale);
 
     accedi_lista_sequenziale(&lista_sequenziale);
     accedi_lista_casuale(&lista_sequenziale);
     accedi_lista_sequenziale(&lista_casuale);
     accedi_lista_casuale(&lista_casuale);
 
-	accedi_array_sequenziale(array);
-    accedi_array_casuale(array);
-	accedi_array_sequenziale(array2);
-    accedi_array_casuale(array2);
+	accedi_array_sequenziale(array_sequenziale);
+    accedi_array_casuale(array_sequenziale);
+	accedi_array_sequenziale(array_casuale);
+    accedi_array_casuale(array_casuale);
 
 
 	return 0;

@@ -3,7 +3,7 @@
 #include <string.h>
 #include <time.h>
 
-#define MAX 104850        // 2^20
+#define MAX 10       // 2^20
 #define RANGE_RANDOM 10   // Range per i valori da inserire nelle liste e negli array
 
 typedef struct lista lista;
@@ -39,15 +39,15 @@ int main(void) {
 	// inizializza_lista_fondo (&testa);
 	// array = crea_primo_array(array);
 	// stampa_lista (&testa);
-	// stampa_array(array);
+	//stampa_array(array);
 
 	printf("\n\n\n\n");
 
 	printf("Questi sono la seconda lista ed il secondo array: \n\n");
 
-	crea_seconda_lista (&testa2);
-	//array2 = crea_secondo_array(array2);
-	//stampa_array(array2);
+	//crea_seconda_lista (&testa2);
+	array2 = crea_secondo_array(array2);
+	stampa_array(array2);
 
 
 	return 0;
@@ -194,18 +194,22 @@ int *crea_primo_array(int *array) {
 
 int *crea_secondo_array(int *array) {
 
-	int val, i;
+	int val, i, pos, num_el_corr = 1;
 
 
 	array = (int *) malloc ( MAX * sizeof(int));
 
-	for (i=1; i<=MAX; i++) {
 
-		val = rand() % i;
-		if (i == 1) {
-			val = 0;
+	while (num_el_corr <= MAX) {
+		pos = rand() % num_el_corr;
+		printf("-->%d\n", pos);
+		if (pos != 0) {
+			for (i = 0; i<pos; i++) {
+				
+			}
 		}
-		array[i-1] = val;
+		array[pos] = rand() % MAX;
+		num_el_corr++;
 	}
 
 	return array;

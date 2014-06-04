@@ -25,6 +25,7 @@ int *crea_secondo_array(int *array);
 void stampa_array(int *array);
 
 int main(void) {
+
 	srand(time(NULL));
 
 	lista *lista_sequenziale, *lista_casuale;
@@ -89,30 +90,28 @@ void inizializza_lista_casuale( lista **testa ) {
         nuovo->numero = rand() % RANGE_RANDOM;
         nuovo->next = NULL;
 
-        if (*testa == NULL) {
-            *testa = nuovo;
+        if (*testa == NULL) {								// se stiamo inserendo il primo numero
+            *testa = nuovo;									// testa è uguale al nuovo puntatore
             p = *testa;
         } else {
-            j = 1;
-            p = *testa;
-            pos = rand() % i + 1;
-            if (pos == 0) {
-                nuovo->next = *testa;
-                *testa = nuovo;
+            j = 1;											// altrimenti utilizzo un contatore
+            p = *testa;										// per scorrere la lista
+            pos = rand() % i + 1;							// creo un numero tra 0 e il numero di elementi
+            if (pos == 0) {									// se pos == 0
+                nuovo->next = *testa;						// inserisco il nuovo numero
+                *testa = nuovo;								// in testa
             } else {
-                while (j<pos) {
-                    p = p->next;
-                    j++;
+                while (j<pos) {								// altrimenti scorro finchè non arrivo alla posizione ineressata
+                    p = p->next;							
+                    j++;									// incremento il contatore
                 }
-                nuovo->next = p->next;
-                p->next = nuovo;
+                nuovo->next = p->next;						// il nuovo numero punterà al successivo del vecchio numero
+                p->next = nuovo;							// ed il vecchio numero punterà a quello numero
             }
         }
     }
-
     int cpu_time_spent = clock() - start;
     printf("Time spent in creation of second list: %i\n", cpu_time_spent);
-}
 
 /**
  * La funzione prende in input un puntatore alla testa di una lista
@@ -237,24 +236,24 @@ int *crea_primo_array(int *array) {
 }
 
 int *crea_secondo_array(int *array) {
-
-	int val, i, pos, num_el_corr = 1;
-
+	clock_t start = clock();
+	int i, pos, num_el_corr = 1;
 
 	array = (int *) malloc ( MAX * sizeof(int));
 
-
-	while (num_el_corr <= MAX) {
-		pos = rand() % num_el_corr;
-		printf("-->%d\n", pos);
-		if (pos != 0) {
-			for (i = 0; i<pos; i++) {
-				
-			}
+	while (num_el_corr <= MAX) {		// finchè non ho riempito tutto l'array
+		pos = rand() % num_el_corr;		// creo un numero random compreso tra 0 ed il numero di elementi già inseiri
+		if (pos!=num_el_corr) {			// se la posizione random è diversa dall' ultimo elemento
+			for (i=num_el_corr; i>=pos; i--) {	
+				array[i+1] = array[i];	// sposto tutti gli elementi successivi alla posizione
+			}							// creando spazion per il nuovo elemento
 		}
-		array[pos] = rand() % MAX;
-		num_el_corr++;
+		array[pos] = rand() % MAX;		// scrivo in array[pos] il numero tra 0 e la dimensione MAX
+		num_el_corr++;					// aumento il contatore di numeri inseriti fin'ora
 	}
+
+	int cpu_time_spent = clock() - start;
+    printf("Time spent in creation of second array: %i\n", cpu_time_spent);
 
 	return array;
 

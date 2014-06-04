@@ -17,9 +17,11 @@ void inizializza_lista_sequenziale(lista **testa);
 void inizializza_lista_casuale( lista **testa );
 void accedi_lista_sequenziale(lista **testa);
 void accedi_lista_casuale(lista **testa);
-int *crea_primo_array(int *array);
-int *crea_secondo_array(int *array);
-void stampa_array(int *array);
+int *inizializza_array_sequenziale(int *array);
+int *inizializza_array_casuale(int *array);
+void accedi_array_sequenziale(int *array);
+void accedi_array_casuale(int *array);
+
 
 int main(void) {
 	srand(time(NULL));
@@ -33,14 +35,20 @@ int main(void) {
 	lista_casuale = NULL;
 
 	inizializza_lista_sequenziale(&lista_sequenziale);
-        inizializza_lista_casuale(&lista_casuale);
-	array = crea_primo_array(array);
-	array2 = crea_secondo_array(array2);
+    inizializza_lista_casuale(&lista_casuale);
+	array = inizializza_array_sequenziale(array);
+	array2 = inizializza_array_casuale(array2);
 
-        accedi_lista_sequenziale(&lista_sequenziale);
-        accedi_lista_casuale(&lista_sequenziale);
-        accedi_lista_sequenziale(&lista_casuale);
-        accedi_lista_casuale(&lista_casuale);
+    accedi_lista_sequenziale(&lista_sequenziale);
+    accedi_lista_casuale(&lista_sequenziale);
+    accedi_lista_sequenziale(&lista_casuale);
+    accedi_lista_casuale(&lista_casuale);
+
+	accedi_array_sequenziale(array);
+    accedi_array_casuale(array);
+	accedi_array_sequenziale(array2);
+    accedi_array_casuale(array2);
+
 
 	return 0;
 }
@@ -68,7 +76,6 @@ void inizializza_lista_sequenziale(lista **testa) {
             p = p->next;
         }
     }
-
     int cpu_time_spent = clock() - start;
     printf("Tempo impiegato per la creazione della lista sequenziale: %d\n", cpu_time_spent);
 }
@@ -108,7 +115,6 @@ void inizializza_lista_casuale( lista **testa ) {
             }
         }
     }
-
     int cpu_time_spent = clock() - start;
     printf("Tempo impiegato per la creazione della lista casuale : %d\n", cpu_time_spent);
 }
@@ -122,16 +128,12 @@ void accedi_lista_sequenziale(lista **testa) {
     lista *puntatore;
     puntatore = *testa;
     int totale = 0;     // Variabile in cui salvo la somma di tutti i valori a cui accedo
-    int elementi = 0;
 
     // Finché non arriviamo a un puntatore invalido, ne stampiamo il valore
     while (puntatore != NULL) {
         totale += puntatore->numero;
         puntatore = puntatore->next;
-        elementi++;
     }
-
-    printf("Numero di elementi %d \n", elementi);
 
     int cpu_time_spent = clock() - start;
     printf("Tempo impiegato per l'accesso sequenziale alla lista: %d\n", cpu_time_spent);
@@ -176,8 +178,8 @@ void accedi_lista_casuale(lista **testa) {
     printf("Tempo impiegato per l'accesso casuale alla lista: %d\n", cpu_time_spent);
 }
 
-int *crea_primo_array(int *array) {
- 
+int *inizializza_array_sequenziale(int *array) {
+    clock_t start = clock();
 	int val, i;
 
 	array = (int *) malloc ( MAX * sizeof(int));
@@ -188,31 +190,57 @@ int *crea_primo_array(int *array) {
 		array[i] = val;
 	}
 
+    int cpu_time_spent = clock() - start;
+    printf("Tempo impiegato per l' inizializzazione dell' array in modo sequenziale: %i\n", cpu_time_spent);
+
 	return array;
 
 }
 
-int *crea_secondo_array(int *array) {
+int *inizializza_array_casuale(int *array) {
+	clock_t start = clock();
+	int i, pos, num_el_corr = 1;
+
+	array = (int *) malloc ( MAX * sizeof(int));
+
+	while (num_el_corr <= MAX) {		// finchè non ho riempito tutto l'array
+		pos = rand() % num_el_corr;		// creo un numero random compreso tra 0 ed il numero di elementi già inseiri
+		if (pos!=num_el_corr) {			// se la posizione random è diversa dall' ultimo elemento
+			for (i=num_el_corr; i>=pos; i--) {	
+				array[i+1] = array[i];	// sposto tutti gli elementi successivi alla posizione
+			}							// creando spazion per il nuovo elemento
+		}
+		array[pos] = rand() % MAX;		// scrivo in array[pos] il numero tra 0 e la dimensione MAX
+		num_el_corr++;					// aumento il contatore di numeri inseriti fin'ora
+	}
+
+	int cpu_time_spent = clock() - start;
+    printf("Tempo impiegato per l' inizializzazione dell' array in modo casuale: %i\n", cpu_time_spent);
+
+	return array;
+
+}
+
+void accedi_array_casuale( int *array ) {
     clock_t start = clock();
-    int i, pos, num_el_corr = 1;
+	int pos, somma = 0, i;
 
-    array = (int *) malloc ( MAX * sizeof(int));
-
-    while (num_el_corr <= MAX) {		// finchè non ho riempito tutto l'array
-        pos = rand() % num_el_corr;		// creo un numero random compreso tra 0 ed il numero di elementi già inseiri
-        if (pos!=num_el_corr) {			// se la posizione random è diversa dall' ultimo elemento
-            for (i=num_el_corr; i>=pos; i--) {	
-                array[i+1] = array[i];	        // sposto tutti gli elementi successivi alla posizione
-            }					// creando spazion per il nuovo elemento
-        }
-        array[pos] = rand() % MAX;		// scrivo in array[pos] il numero tra 0 e la dimensione MAX
-        num_el_corr++;				// aumento il contatore di numeri inseriti fin'ora
-    }
-
+	for (i=0; i<MAX; i++) {
+		pos = rand() % RANGE_RANDOM;
+		pos += array[pos];
+	}
     int cpu_time_spent = clock() - start;
-    printf("Time spent in creation of second array: %d\n", cpu_time_spent);
+    printf("Tempo impiegato per l' accesso all' array in modo casuale: %i\n", cpu_time_spent);
+}
 
-    return array;
+void accedi_array_sequenziale(int *array) {
+    clock_t start = clock();
+	int i, somma;
 
+	for (i=0; i<MAX; i++) {
+		somma += array[i];
+	}
+    int cpu_time_spent = clock() - start;
+    printf("Tempo impiegato per l' accesso all' array in modo sequenziale: %i\n", cpu_time_spent);
 }
 

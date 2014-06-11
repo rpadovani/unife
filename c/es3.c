@@ -1,9 +1,21 @@
+/**
+ * Esercitazione numero 3
+ *
+ * Corso di architettura degli elaboratori
+ * 
+ * Studio sull'utilizzo della memoria da parte del processore e del principio
+ * di località
+ *
+ * Giovanni Bucci        giovanni01.bucci@student.unife.it
+ * Riccardo Padovani     riccardo.padovani@student.unife.it
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 
-#define MAX 12000    
+#define MAX 524288  
 #define RANGE_RANDOM 10   // Range per i valori da inserire nelle liste e negli array
 
 typedef struct lista lista;

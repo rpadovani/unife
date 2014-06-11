@@ -3,14 +3,14 @@
 #include <string.h>
 #include <time.h>
 
-#define MAX 15000      
+#define MAX 12000    
 #define RANGE_RANDOM 10   // Range per i valori da inserire nelle liste e negli array
 
 typedef struct lista lista;
 
 struct lista {
-	int numero;
-	lista *next;
+    int numero;
+    lista *next;
 };
 
 void inizializza_lista_sequenziale(lista **testa);
@@ -210,11 +210,11 @@ int *inizializza_array_casuale(int *array) {
         pos = rand() % num_el_corr;		// creo un numero random compreso tra 0 ed il numero di elementi già inseiri
         if (pos!=num_el_corr) {			// se la posizione random è diversa dall' ultimo elemento
             for (i=num_el_corr; i>=pos; i--) {	
-                array[i+1] = array[i];	// sposto tutti gli elementi successivi alla posizione
-            }							// creando spazion per il nuovo elemento
+                array[i+1] = array[i];  	// sposto tutti gli elementi successivi alla posizione
+            }					// creando spazion per il nuovo elemento
         }
-        array[pos] = rand() % MAX;		// scrivo in array[pos] il numero tra 0 e la dimensione MAX
-        num_el_corr++;					// aumento il contatore di numeri inseriti fin'ora
+        array[pos] = rand() % RANGE_RANDOM;	// scrivo in array[pos] un numero casuale
+        num_el_corr++;			        // aumento il contatore di numeri inseriti fin'ora
     }
 
     float cpu_time_spent = (clock() - start)/1000000;
@@ -229,8 +229,8 @@ void accedi_array_casuale( int *array ) {
     int pos, somma = 0, i;
 
     for (i=0; i<MAX; i++) {
-        pos = rand() % RANGE_RANDOM;
-        pos += array[pos];
+        pos = rand() % MAX;
+        somma += array[pos];
     }
     float cpu_time_spent = (clock() - start)/1000000;
     printf("[ A ] Tempo impiegato per l'accesso all'array in modo casuale:\t\t%.4f secondi\n", cpu_time_spent);
@@ -238,7 +238,7 @@ void accedi_array_casuale( int *array ) {
 
 void accedi_array_sequenziale(int *array) {
     float start = clock();
-    int i, somma;
+    int i, somma = 0;
 
     for (i=0; i<MAX; i++) {
         somma += array[i];
